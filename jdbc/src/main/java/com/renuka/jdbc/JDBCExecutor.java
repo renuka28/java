@@ -42,7 +42,7 @@ public class JDBCExecutor {
         Connection connection = null;
 
         if(host == "aws"){
-            server = "learn-jdbc.cgohglsr1y4a.us-east-2.rds.amazonaws.com";
+            server = "";
             userName = "";
             password = "";
         }
