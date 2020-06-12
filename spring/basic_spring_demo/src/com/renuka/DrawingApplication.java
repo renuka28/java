@@ -13,26 +13,26 @@ import org.springframework.core.io.FileSystemResource;
 public class DrawingApplication {
 
 	public static void main(String[] args) {
-//		//demo simple bean creation
-//		demoSimpleCreation();
-//		//demo multiple ways of creation and various ways init/destory methods are called
-//		demoVariousCreations();
-//		//demo BeanFactoryPostProcessor and PropertyPlaceholderConfigure
-//		demoBeanFactoryPostProcessors();
-//		//demo coding to Interface
-//		demoCodingToInterface();
-//		//demo spring annotations
-//		demoAnnotation(); 
-//		//demo spring annotations
-//		demoAutoWiredAnnotation();
-//		//demo JSR-250 Annotations
-//		demoJSR250Annotations(); 
-//		//demo component and sterotype annotations
-//		demoComponentAndStereotypeAnnotation();
-//		//demo MessageSource properties
-//		demoMessageSourceProperties();
-//		//demo eventlistening 
-//		demoEvents();
+		//demo simple bean creation
+		demoSimpleCreation();
+		//demo multiple ways of creation and various ways init/destory methods are called
+		demoVariousCreations();
+		//demo BeanFactoryPostProcessor and PropertyPlaceholderConfigure
+		demoBeanFactoryPostProcessors();
+		//demo coding to Interface
+		demoCodingToInterface();
+		//demo spring annotations
+		demoAnnotation(); 
+		//demo spring annotations
+		demoAutoWiredAnnotation();
+		//demo JSR-250 Annotations
+		demoJSR250Annotations(); 
+		//demo component and sterotype annotations
+		demoComponentAndStereotypeAnnotation();
+		//demo MessageSource properties
+		demoMessageSourceProperties();
+		//demo eventlistening 
+		demoEvents();
 		
 		
 	}
