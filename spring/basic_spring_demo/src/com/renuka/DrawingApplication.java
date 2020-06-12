@@ -33,7 +33,6 @@ public class DrawingApplication {
 		demoMessageSourceProperties();
 		//demo eventlistening 
 		demoEvents();		
-		
 	}
 	
 	public static void demoEvents() {
