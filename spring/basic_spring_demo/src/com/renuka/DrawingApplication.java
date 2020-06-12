@@ -29,10 +29,22 @@ public class DrawingApplication {
 //		demoJSR250Annotations(); 
 //		//demo component and sterotype annotations
 //		demoComponentAndStereotypeAnnotation();
-		//demo MessageSource properties
-		demoMessageSourceProperties();
+//		//demo MessageSource properties
+//		demoMessageSourceProperties();
+//		//demo eventlistening 
+//		demoEvents();
 		
 		
+	}
+	
+	public static void demoEvents() {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_events.xml");		
+		context.registerShutdownHook();
+		System.out.println("\nusing 'spring_events.xml'");
+		//annotations automatically names the CircleEvents as circleEvents
+		//that is changes the first letter to lower case
+		Shape shape = (Shape) context.getBean("circleEvents");
+		shape.draw();
 	}
 	
 	public static void demoMessageSourceProperties() {
