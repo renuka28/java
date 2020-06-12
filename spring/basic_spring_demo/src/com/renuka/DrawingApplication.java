@@ -32,8 +32,7 @@ public class DrawingApplication {
 		//demo MessageSource properties
 		demoMessageSourceProperties();
 		//demo eventlistening 
-		demoEvents();
-		
+		demoEvents();		
 		
 	}
 	
@@ -45,6 +44,7 @@ public class DrawingApplication {
 		//that is changes the first letter to lower case
 		Shape shape = (Shape) context.getBean("circleEvents");
 		shape.draw();
+		System.out.println("\n----------------------------------------------------------------------------------------------");
 	}
 	
 	public static void demoMessageSourceProperties() {
@@ -56,7 +56,7 @@ public class DrawingApplication {
 		//CircleMessageSource is autowired as circleMessageSource
 		Shape shape = (Shape) context.getBean("circleMessageSource");
 		shape.draw();
-	
+		System.out.println("\n----------------------------------------------------------------------------------------------");	
 	}
 	
 	public static void demoComponentAndStereotypeAnnotation() {
@@ -68,7 +68,7 @@ public class DrawingApplication {
 		//that is changes the first letter to lower case
 		Shape shape = (Shape) context.getBean("circleComponentAndStereotypeAnnotation");
 		shape.draw();
-	
+		System.out.println("\n----------------------------------------------------------------------------------------------");	
 	}
 	
 	public static void demoJSR250Annotations() {
@@ -78,7 +78,7 @@ public class DrawingApplication {
 				+ "'circleJSR250Annotations' in 'spring_JSR250_annotations.xml'");
 		Shape shape = (Shape) context.getBean("circleJSR250Annotations");
 		shape.draw();
-	
+		System.out.println("\n----------------------------------------------------------------------------------------------");	
 	}
 	
 	public static void demoAutoWiredAnnotation() {
@@ -87,7 +87,7 @@ public class DrawingApplication {
 		System.out.println("\nbuilding Autowired Circle using id 'circleAutoWired' in 'spring_autowired_annotations.xml");
 		Shape shape = (Shape) context.getBean("circleAutoWired");
 		shape.draw();
-	
+		System.out.println("\n----------------------------------------------------------------------------------------------");	
 	}
 	
 	public static void demoAnnotation() {
@@ -96,7 +96,7 @@ public class DrawingApplication {
 		System.out.println("\nbuilding Circle using interface way. id 'circle' in 'spring_annotations.xml'");
 		Shape shape = (Shape) context.getBean("circle");
 		shape.draw();
-	
+		System.out.println("\n----------------------------------------------------------------------------------------------");	
 	}
 	
 	public static void demoCodingToInterface() {
@@ -122,7 +122,7 @@ public class DrawingApplication {
 		System.out.println("\nbuilding Circle using interface way. id 'shape'");
 		shape = (Shape) context.getBean("shape");
 		shape.draw();	
-		
+		System.out.println("\n----------------------------------------------------------------------------------------------");		
 	}
 	
 
@@ -152,6 +152,7 @@ public class DrawingApplication {
 		drawAutoWiredByNameTriangle(context);
 		drawAutoWiredByTypeTriangle(context);
 		demoScope(context);
+		System.out.println("\n----------------------------------------------------------------------------------------------");
 	}
 	
 	public static void demoSimpleCreation() {
@@ -164,7 +165,7 @@ public class DrawingApplication {
 				+ "so we will be getting a bean with values (125, 125) instead of the original values");
 		Point point = (Point) context.getBean("point1");
 		System.out.println("point 1 =  (" + point.getX() + "," + point.getY() + ")");		
-		
+		System.out.println("\n----------------------------------------------------------------------------------------------");		
 	}
 	
 	public static void demoBeanFactoryPostProcessors() {
@@ -175,6 +176,7 @@ public class DrawingApplication {
 		String id = "triangle3";
 		Triangle3 triangle3 = (Triangle3) context.getBean(id);
 		triangle3.draw();
+		System.out.println("\n----------------------------------------------------------------------------------------------");
 	}
 	
 	public static void drawTriangle(ApplicationContext context) {		
@@ -195,7 +197,7 @@ public class DrawingApplication {
 				System.out.println("(" + point.getX() + "," + point.getY() + ")");
 			}
 		}
-		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.println("\n----------------------------------------------------------------------------------------------");
 	}	
 	
 	public static void drawTriangle2(ApplicationContext context) {		
@@ -214,7 +216,7 @@ public class DrawingApplication {
 			}
 			
 		}
-		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.println("\n----------------------------------------------------------------------------------------------");
 	}	 
 	
 	public static void drawAutoWiredByNameTriangle(ApplicationContext context) {
@@ -228,7 +230,7 @@ public class DrawingApplication {
 			System.out.println("autoPointB = (" + triangle.getAutoPointB().getX() + "," + triangle.getAutoPointB().getY() + ")");
 			System.out.println("autoPointC = (" + triangle.getAutoPointC().getX() + "," + triangle.getAutoPointC().getY() + ")");
 		}
-		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.println("\n----------------------------------------------------------------------------------------------");	
 	}
 	
 	public static void drawAutoWiredByTypeTriangle(ApplicationContext context) {
@@ -243,7 +245,7 @@ public class DrawingApplication {
 			System.out.println("autoPointC = (" + triangle.getAutoPointC().getX() + "," + triangle.getAutoPointC().getY() + ")");
 		}
 		System.out.println("As can be seen above same Point is mapped to all three points.. So not a good idea if multiple types are present in the bean ... ");
-		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.println("\n----------------------------------------------------------------------------------------------");	
 	}		
 	
 	public static void demoScope(ApplicationContext context) {	
@@ -271,7 +273,6 @@ public class DrawingApplication {
 		System.out.println("value in = pointPrototype1" + "(" + pointPrototype1.getX() + "," + pointPrototype1.getY() + ")");
 		System.out.print("is pointPrototype == pointPrototype1 = " );
 		System.out.println(pointPrototype == pointPrototype1);
-		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.println("\n----------------------------------------------------------------------------------------------");
 	}
 }
-
