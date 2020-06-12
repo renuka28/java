@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://springframework.org/dtd/spring-beans-2.0.dtd">
+
+
+<!-- we have defined defaultInit and defaultDestory methods. If they are present they will be called otherwise custome ones d
+defined at the bean level will be called -->	
+<beans default-init-method="defaultInit"  default-destroy-method="defaultDestroy">
+
+	<!-- example of bean interface inheritance. Lets make this abstract sot hat no one can instantiate this bean -->	
+	<bean id="parentTriangle" class="com.renuka.Triangle2" abstract="true">
+		<property name="pointA" ref="point1"/>
+		<property name="pointB" ref="point2"/>
+		<property name="points">
+			<list>
+				<ref bean="point1"/>
+				<ref bean="point2"/>
+				<ref bean="point3"/>
+			</list>
+		</property>					
+	</bean>
+	<!-- example of bean interface inheritance - happy with pointA and pointB. only add pointC -->	
+	<bean id="childTriangle1" class="com.renuka.Triangle2" parent="parentTriangle">		
+		<property name="pointC" ref="point3"/>		
+	</bean>	
+	<!-- example of bean interface inheritance - happy with pointA.  update pointB and add pointC -->
+	<bean id="childTriangle2" class="com.renuka.Triangle2" parent="parentTriangle">
+		<property name="pointB" ref="zeroPoint"/>
+		<property name="pointC" ref="autoPointA"/>		
+	</bean>
+	<!-- example of bean interface inheritance - happy with pointA.  update pointB, add pointC and add elemetns to points -->
+	<bean id="childTriangle3" class="com.renuka.Triangle2" parent="parentTriangle">
+		<property name="pointB" ref="zeroPoint"/>
+		<property name="pointC" ref="autoPointA"/>	
+			<property name="points">
+			<list merge="true">
+				<ref bean="autoPointA"/>
+				<ref bean="autoPointB"/>
+				<ref bean="autoPointC"/>
+			</list>
+		</property>		
+	</bean>
+	
+
+	<bean id="triangleNew" class="com.renuka.Triangle2">
+		<property name="pointA" ref="point1"/>
+		<property name="pointB" ref="point2"/>
+		<property name="pointC" ref="point3"/>		
+		<property name="points">
+			<list>
+				<ref bean="autoPointA"/>
+				<ref bean="autoPointB"/>
+				<ref bean="autoPointC"/>
+			</list>
+		</property>	
+	</bean>
+
+		
+	<bean id="triangle" class="com.renuka.Triangle" name="name-triangle" init-method="myInit" destroy-method="myDestory">
+		<constructor-arg  type="java.lang.String" value="Equilateral"/>
+		<constructor-arg type="int" value="20"/>
+		<property name="angle" value="120"/>		
+		<property name="pointA" ref="zeroPoint"/>
+		<!-- example of inner bean. when the bean is not required anywhere we can create it here itself. No id required -->	
+		<property name="pointB">
+			<bean class="com.renuka.Point">
+				<property name="x" value="-20"/>
+				<property name="y" value="0"/>	
+			</bean>		
+		</property>
+		<property name="pointC" >
+			<bean class="com.renuka.Point">
+				<property name="x" value="0"/>
+				<property name="y" value="20"/>	
+			</bean>
+		</property>	
+		<property name="points">
+			<list>
+				<ref bean="point1"/>
+				<ref bean="point2"/>
+				<ref bean="point3"/>
+			</list>
+		</property>	
+	</bean>
+	
+	<bean id="point1" class="com.renuka.Point"  init-method="myInit" destroy-method="myDestory">
+		<property name="x" value="100"/>
+		<property name="y" value="100"/>	
+	</bean>
+	<bean id="point2" class="com.renuka.Point">
+		<property name="x" value="200"/>
+		<property name="y" value="200"/>	
+	</bean>
+	<bean id="point3" class="com.renuka.Point">
+		<property name="x" value="300"/>
+		<property name="y" value="300"/>	
+	</bean>
+	
+	
+	<!-- example of autowiring by name. The following bean will have autoPointA, autoPointB, autoPointC injected as it matches the name of the private 
+	variables in com.renuka.AutoWiredTriangle -->	
+	<bean id="autoWiredByNameTriangle" class="com.renuka.AutoWiredByNameTriangle"  autowire="byName">
+	</bean>
+	<bean id="autoPointA" class="com.renuka.Point">
+		<property name="x" value="400"/>
+		<property name="y" value="400"/>	
+	</bean>
+	<bean id="autoPointB" class="com.renuka.Point">
+		<property name="x" value="500"/>
+		<property name="y" value="500"/>	
+	</bean>
+	<bean id="autoPointC" class="com.renuka.Point">
+		<property name="x" value="600"/>
+		<property name="y" value="600"/>	
+	</bean>
+	
+		
+	<!-- example of autowiring by type. The following bean will have autoPointA, autoPointB, autoPointC injected as it matches the name of the private 
+	variables in com.renuka.AutoWiredTriangle -->	
+	<bean id="autoWiredByTypeTriangle" class="com.renuka.AutoWiredByTypeTriangle"  autowire="byType">
+	</bean>
+		<bean id="autoTypePoint1" class="com.renuka.Point2">
+		<property name="x" value="700"/>
+		<property name="y" value="700"/>	
+	</bean>
+	<!-- 
+	<bean id="autoTypePoint12" class="com.renuka.Point2">
+		<property name="x" value="800"/>
+		<property name="y" value="800"/>	
+	</bean>
+	<bean id="autoTypePoint13" class="com.renuka.Point2">
+		<property name="x" value="900"/>
+		<property name="y" value="900"/>	
+	</bean>
+	 -->
+	 
+ 	<bean id="pointSingleton" class="com.renuka.Point" scope="singleton">
+		<property name="x" value="1000"/>
+		<property name="y" value="1000"/>	
+	</bean>
+	
+	<bean id="pointPrototype" class="com.renuka.Point" scope="prototype">
+		<property name="x" value="2000"/>
+		<property name="y" value="2000"/>	
+	</bean>
+
+	
+		
+	<!-- Common bean used other places. So has an id and defined separately  -->
+	<bean id="zeroPoint" class="com.renuka.Point">
+		<property name="x" value="0"/>
+		<property name="y" value="0"/>	
+	</bean>
+	
+	
+	<!--  define an alias for an existing bean -->
+	<alias name="triangle" alias="alias1-triangle"/>
+	<alias name="triangle" alias="alias2-triangle"/>
+	
+	
+</beans>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://springframework.org/dtd/spring-beans-2.0.dtd">
+
+
+<!-- we have defined defaultInit and defaultDestory methods. If they are present they will be called otherwise custom ones d
+defined at the bean level will be called -->	
+<beans >
+
+	<bean id="triangle3" class="com.renuka.Triangle3">
+		<property name="pointA" ref="point1"/>
+		<property name="pointB" ref="point2"/>
+		<property name="pointC" ref="point3"/>		
+	</bean>
+		
+	<!-- Adding placeholders to be read from pointsConfig.properties file. This is for org.springframework.beans.factory.config.PropertyPlaceholderConfigurer Demo -->
+	<bean id="point1" class="com.renuka.Point3">
+		<property name="x" value="${point1.pointX}"/>
+		<property name="y" value="${point1.pointY}"/>	
+	</bean>
+	<bean id="point2" class="com.renuka.Point3">
+		<property name="x" value="200"/>
+		<property name="y" value="200"/>	
+	</bean>
+	<bean id="point3" class="com.renuka.Point3">
+		<property name="x" value="300"/>
+		<property name="y" value="300"/>	
+	</bean>
+	
+	<bean class="com.renuka.DrawingAppBeanFactoryPostProcessor"/>
+	<!-- org.springframework.beans.factory.config.PropertyPlaceholderConfigurer inbuilt BeanFactoryPostProcessor to process properties -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="pointsConfig.properties"/>
+	</bean>
+
+</beans>

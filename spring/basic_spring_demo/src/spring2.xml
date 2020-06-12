@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://springframework.org/dtd/spring-beans-2.0.dtd">
+
+
+<!-- we have defined defaultInit and defaultDestory methods. If they are present they will be called otherwise custom ones d
+defined at the bean level will be called -->	
+<beans default-init-method="defaultInit"  default-destroy-method="defaultDestroy">
+	
+	<bean id="point" class="com.renuka.Point"  init-method="myInit" destroy-method="myDestory">
+		<property name="x" value="100"/>
+		<property name="y" value="100"/>	
+	</bean>
+	
+	<bean id="point1" class="com.renuka.Point">
+		<property name="x" value="100"/>
+		<property name="y" value="100"/>	
+	</bean>
+	<!-- just declare the BeanPostProcessor bena here. no configuration, including id necessary. This is just to let the spring know that this bean exist.
+	this only gets called after initialization and not after destory. Also the methods in this class gets executed for all the beans and can result in lots 
+	of method calls if we have many beans--> 
+	<bean class="com.renuka.DrawingAppBeanPostProcessor" />
+</beans>
