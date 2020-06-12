@@ -1,6 +1,7 @@
 package com.renuka;
 
-public class Point3{
+
+public class SimplePoint{
 
 	private int x;
 	private int y;

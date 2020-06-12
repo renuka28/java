@@ -13,13 +13,43 @@ import org.springframework.core.io.FileSystemResource;
 public class DrawingApplication {
 
 	public static void main(String[] args) {
-		
-		demo1();
-		demo2();
-		demo3();
+		//demo simple bean creation
+		demoSimpleCreation();
+		//demo multiple ways of creation and various ways init/destory methods are called
+		demoVariousCreations();
+		//demo BeanFactoryPostProcessor and PropertyPlaceholderConfigure
+		demoBeanFactoryPostProcessors();
+		//demo coding to Interface
+		demoCodingToInterface();
 	}
 	
-	public static void demo1() {
+	public static void demoCodingToInterface() {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_coding_to_interface.xml");
+		context.registerShutdownHook();
+		//non coding to interface way
+		System.out.println("\nbuilding Triangle using non interface way. id 'triangle4'");
+		Triangle4 triangle4 = (Triangle4) context.getBean("triangle4");
+		triangle4.draw();
+		System.out.println("\nbuilding Circle using non interface way. id 'circle'");
+		Circle circle = (Circle) context.getBean("circle");
+		circle.draw();	
+		
+		//now lets code to the Shape Interface
+		System.out.println("\nbuilding Triangle using interface way. id 'triangle3'");
+		Shape shape = (Shape) context.getBean("triangle4");
+		shape.draw();
+		System.out.println("\nbuilding Circle using interface way. id 'circle'");
+		shape = (Shape) context.getBean("circle");
+		shape.draw();	
+		//we can change class outside if just change the class it is referring to in the xml
+		System.out.println("\nbuilding Circle using interface way. id 'shape'");
+		shape = (Shape) context.getBean("shape");
+		shape.draw();	
+		
+	}
+	
+
+	public static void demoVariousCreations() {
 		// level 1
 		//straight instantiation
 		//Triangle triangle = new Triangle();
@@ -36,7 +66,7 @@ public class DrawingApplication {
 		//level 4
 		//using spring AbstractionApplicationContext to ensure we can shutdown the desktop application. This is not requied for webapps and enterprise apps
 		//spring will know when to shutdown. Both ApplicationContext and AbstractApplicationContext have same interfaces and work similarly 
-		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_creations.xml");
 		//register our shutdownhook
 		context.registerShutdownHook();				
 		drawTriangle(context);
@@ -46,10 +76,10 @@ public class DrawingApplication {
 		demoScope(context);
 	}
 	
-	public static void demo2() {
+	public static void demoSimpleCreation() {
 		//simpler bean definition so that output is not cluttered.. just for checking init/default/interface destroy methods
-		//used to demo BeanPostProcessor 
-		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring2.xml");
+		//demo BeanFactoryPostProcessor and PropertyPlaceholderConfigurer 
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_simple.xml");
 		context.registerShutdownHook();	
 		System.out.println("point1 is defined with values 100, 100 in spring2.xml. But we created a new Point object in DrawingAppBeanPostProcessor"
 				+ "so we will be getting a bean with values (125, 125) instead of the original values");
@@ -58,9 +88,9 @@ public class DrawingApplication {
 		
 	}
 	
-	public static void demo3() {
+	public static void demoBeanFactoryPostProcessors() {
 		//to demonstrate BeanFactoryPostProcessors
-		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring3.xml");
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_pp.xml");
 		context.registerShutdownHook();		
 		String id = "triangle3";
 		Triangle3 triangle3 = (Triangle3) context.getBean(id);
