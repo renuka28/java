@@ -1,5 +1,7 @@
 package com.renuka;
 
+import org.springframework.beans.factory.annotation.Required;
+
 public class Circle implements Shape{
 	
 	private SimplePoint center;
@@ -8,6 +10,7 @@ public class Circle implements Shape{
 		return center;
 	}
 
+	@Required 
 	public void setCenter(SimplePoint center) {
 		this.center = center;
 	}

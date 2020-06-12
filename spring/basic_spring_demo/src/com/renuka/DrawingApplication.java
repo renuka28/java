@@ -1,4 +1,4 @@
-package com.renuka;
+package com.renuka;   
 
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -13,21 +13,86 @@ import org.springframework.core.io.FileSystemResource;
 public class DrawingApplication {
 
 	public static void main(String[] args) {
-		//demo simple bean creation
-		demoSimpleCreation();
-		//demo multiple ways of creation and various ways init/destory methods are called
-		demoVariousCreations();
-		//demo BeanFactoryPostProcessor and PropertyPlaceholderConfigure
-		demoBeanFactoryPostProcessors();
-		//demo coding to Interface
-		demoCodingToInterface();
+//		//demo simple bean creation
+//		demoSimpleCreation();
+//		//demo multiple ways of creation and various ways init/destory methods are called
+//		demoVariousCreations();
+//		//demo BeanFactoryPostProcessor and PropertyPlaceholderConfigure
+//		demoBeanFactoryPostProcessors();
+//		//demo coding to Interface
+//		demoCodingToInterface();
+//		//demo spring annotations
+//		demoAnnotation(); 
+//		//demo spring annotations
+//		demoAutoWiredAnnotation();
+//		//demo JSR-250 Annotations
+//		demoJSR250Annotations(); 
+//		//demo component and sterotype annotations
+//		demoComponentAndStereotypeAnnotation();
+		//demo MessageSource properties
+		demoMessageSourceProperties();
+		
+		
+	}
+	
+	public static void demoMessageSourceProperties() {
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring_messagesource.xml");		
+		System.out.println("\nusing 'spring_messagesource.xml'");
+		String message = (String) context.getMessage("greeting", null, "Default hello", null);
+		System.out.println(message);
+		//lets see if circle gets the message
+		//CircleMessageSource is autowired as circleMessageSource
+		Shape shape = (Shape) context.getBean("circleMessageSource");
+		shape.draw();
+	
+	}
+	
+	public static void demoComponentAndStereotypeAnnotation() {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_component_and_stereotype_annotations.xml");
+		context.registerShutdownHook();
+		System.out.println("\nbuilding demoComponentAndStereotypeAnnotation Circle using id "
+				+ "'circleComponentAndStereotypeAnnotation' in 'spring_component_and_stereotype_annotations.xml'");
+		//annotations automatically names the CircleComponentAndStereotypeAnnotation as circleComponentAndStereotypeAnnotation
+		//that is changes the first letter to lower case
+		Shape shape = (Shape) context.getBean("circleComponentAndStereotypeAnnotation");
+		shape.draw();
+	
+	}
+	
+	public static void demoJSR250Annotations() {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_JSR250_annotations.xml");
+		context.registerShutdownHook();
+		System.out.println("\nbuilding spring_JSR250_annotations Circle using id "
+				+ "'circleJSR250Annotations' in 'spring_JSR250_annotations.xml'");
+		Shape shape = (Shape) context.getBean("circleJSR250Annotations");
+		shape.draw();
+	
+	}
+	
+	public static void demoAutoWiredAnnotation() {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_autowired_annotations.xml");
+		context.registerShutdownHook();
+		System.out.println("\nbuilding Autowired Circle using id 'circleAutoWired' in 'spring_autowired_annotations.xml");
+		Shape shape = (Shape) context.getBean("circleAutoWired");
+		shape.draw();
+	
+	}
+	
+	public static void demoAnnotation() {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_annotations.xml");
+		context.registerShutdownHook();
+		System.out.println("\nbuilding Circle using interface way. id 'circle' in 'spring_annotations.xml'");
+		Shape shape = (Shape) context.getBean("circle");
+		shape.draw();
+	
 	}
 	
 	public static void demoCodingToInterface() {
 		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_coding_to_interface.xml");
 		context.registerShutdownHook();
 		//non coding to interface way
-		System.out.println("\nbuilding Triangle using non interface way. id 'triangle4'");
+		System.out.println("Demoing coding to interface");
+		System.out.println("\nbuilding Triangle using non interface way. id 'triangle4' in 'spring_coding_to_interface.xml' ");
 		Triangle4 triangle4 = (Triangle4) context.getBean("triangle4");
 		triangle4.draw();
 		System.out.println("\nbuilding Circle using non interface way. id 'circle'");
@@ -35,7 +100,7 @@ public class DrawingApplication {
 		circle.draw();	
 		
 		//now lets code to the Shape Interface
-		System.out.println("\nbuilding Triangle using interface way. id 'triangle3'");
+		System.out.println("\nbuilding Triangle using interface way. id 'triangle3'  in 'spring_coding_to_interface.xml'");
 		Shape shape = (Shape) context.getBean("triangle4");
 		shape.draw();
 		System.out.println("\nbuilding Circle using interface way. id 'circle'");
@@ -68,7 +133,8 @@ public class DrawingApplication {
 		//spring will know when to shutdown. Both ApplicationContext and AbstractApplicationContext have same interfaces and work similarly 
 		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_creations.xml");
 		//register our shutdownhook
-		context.registerShutdownHook();				
+		context.registerShutdownHook();
+		System.out.println("Demoing various kind of creations");
 		drawTriangle(context);
 		drawTriangle2(context);	
 		drawAutoWiredByNameTriangle(context);
@@ -81,6 +147,7 @@ public class DrawingApplication {
 		//demo BeanFactoryPostProcessor and PropertyPlaceholderConfigurer 
 		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_simple.xml");
 		context.registerShutdownHook();	
+		System.out.println("Demoing simple creatioons");
 		System.out.println("point1 is defined with values 100, 100 in spring2.xml. But we created a new Point object in DrawingAppBeanPostProcessor"
 				+ "so we will be getting a bean with values (125, 125) instead of the original values");
 		Point point = (Point) context.getBean("point1");
@@ -92,6 +159,7 @@ public class DrawingApplication {
 		//to demonstrate BeanFactoryPostProcessors
 		AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring_pp.xml");
 		context.registerShutdownHook();		
+		System.out.println("Demoing BeanFactoryPostProcessors");
 		String id = "triangle3";
 		Triangle3 triangle3 = (Triangle3) context.getBean(id);
 		triangle3.draw();

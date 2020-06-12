@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+           
+     <bean id="circleAutoWired" class="com.renuka.CircleAutoWired">
+			
+	</bean>
+	
+	<!--  with qualifier tag spring will autowire this bean to CircleAutoWired instance -->
+	<!--  order is it will check, byType(if only one bean with right type),  byName and then by Qualifier tag-->
+	<bean id="center12e" class="com.renuka.SimplePoint">
+		<qualifier value="myCirclePoint"/>	    	
+		<property name="x" value="20"/>
+		<property name="y" value="20"/>	
+	</bean>
+ 	<bean id="center1" class="com.renuka.SimplePoint">
+		<property name="x" value="500"/>
+		<property name="y" value="500"/>	
+	</bean> 
+               
+     <!-- with this tag no need to add any annotators like org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor  -->
+     <context:annotation-config/>
+     
+</beans>
