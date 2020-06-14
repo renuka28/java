@@ -1,10 +1,13 @@
 package org.renuka.learn.java.aop.model;
 
+import org.renuka.learn.java.aop.aspect.Loggable;
+
 public class Circle {
 	private String name;
 	private int center = 100;
 	
 
+	@Loggable
 	public int getCenter() {
 		return center;
 	}
@@ -19,6 +22,7 @@ public class Circle {
 		throw new RuntimeException();
 	}
 
+	@Loggable
 	public String getName() {
 		return name;
 	}

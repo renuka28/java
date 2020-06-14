@@ -19,5 +19,16 @@
 	
 	<bean name="shapeService" class ="org.renuka.learn.java.aop.service.ShapeService" autowire="byName"/>		
 	<bean name="loggingAspect" class ="org.renuka.learn.java.aop.aspect.LoggingAspect"/>
+	<bean name="loggingXMLAspect" class ="org.renuka.learn.java.aop.aspect.LoggingXMLAspect"/>
+	
+	<!--  -->
+	<aop:config>
+		<aop:aspect id="loggingXMLAspect" ref="loggingXMLAspect">
+			<aop:pointcut id="allGetters" expression="execution(* get*())"/>
+			<aop:around pointcut-ref="allGetters" method="myXMLAdvice"/>
+			<aop:before pointcut="execution(* set*(..))" method="myXMLSetAdviceBefore"/>	
+			<aop:after pointcut="execution(* set*(..))" method="myXMLSetAdviceAfter"/>		
+		</aop:aspect>
+	</aop:config>
 
 </beans>

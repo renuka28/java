@@ -11,12 +11,42 @@ public class AopMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub		
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_aop.xml");
-		aopSetup(ctx);
-		aopWildCardDemo(ctx);
-		aopPointCutDemo(ctx);
-		aopJoinPointsDemo(ctx);
-		aopAfterDemo(ctx);	
-		aopAroundDemo(ctx);
+//		aopSetup(ctx);
+//		aopWildCardDemo(ctx);
+//		aopPointCutDemo(ctx);
+//		aopJoinPointsDemo(ctx);
+//		aopAfterDemo(ctx);	
+//		aopAroundDemo(ctx);
+//		aopCustomAnnotationDemo(ctx);
+		aopXMLAnnotationDemo(ctx);
+		
+	}
+	
+	public static void aopXMLAnnotationDemo(ApplicationContext ctx) {
+		
+		ShapeService shapeSerivce = ctx.getBean("shapeService", ShapeService.class);
+		System.out.println("--------------------------------------------------------");
+		Circle circle = shapeSerivce.getCircle();
+		System.out.println("--------------------------------------------------------");
+		circle.setName("XML Aspect  - name set");
+		System.out.println("--------------------------------------------------------");
+		System.out.println(circle.getName());
+//		//this will trigger custom loggable annotation
+//		System.out.println(circle.getCenter());		
+//		System.out.println(circle.getName());
+	
+	}
+	
+
+	public static void aopCustomAnnotationDemo(ApplicationContext ctx) {
+			
+			ShapeService shapeSerivce = ctx.getBean("shapeService", ShapeService.class);
+			System.out.println("--------------------------------------------------------");
+			Circle circle = shapeSerivce.getCircle();
+			//this will trigger custom loggable annotation
+			System.out.println(circle.getCenter());		
+			System.out.println(circle.getName());
+		
 	}
 	
 	public static void aopAroundDemo(ApplicationContext ctx) {
