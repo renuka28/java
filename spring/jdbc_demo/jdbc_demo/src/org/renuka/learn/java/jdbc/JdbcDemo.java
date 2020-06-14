@@ -12,11 +12,11 @@ public class JdbcDemo {
 		// TODO Auto-generated method stub
 		
 		//basic jdbc demo
-//		demoBasicJDBC();
-//		//demo jdbc using spring
-//		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc.xml");
-//		demoBasicSpringJDBC(ctx);
-//		demoBasicSpringJDBCWithDBCP();
+		demoBasicJDBC();
+		//demo jdbc using spring
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc.xml");
+		demoBasicSpringJDBC(ctx);
+		demoBasicSpringJDBCWithDBCP();
 		demoBasicSpringJDBCTempate();
 
 	}

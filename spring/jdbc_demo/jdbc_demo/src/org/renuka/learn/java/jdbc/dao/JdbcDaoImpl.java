@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JdbcDaoImpl {
 	
-	@Autowired
+	
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 	
@@ -56,7 +56,9 @@ public class JdbcDaoImpl {
 	//this will demo using jdbctemplate
 	public int getCircleCount() {		
 		String sql = "SELECT COUNT(*) from Circle";
-		jdbcTemplate.setDataSource(getDataSource());
+		//JdbcTemplate already had datasource which was sent in setDataSource when spring
+		//calls it during initilization. We can remove this now
+		//jdbcTemplate.setDataSource(getDataSource());
 		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 	
@@ -73,8 +75,12 @@ public class JdbcDaoImpl {
 		return dataSource;
 	}
 
+	@Autowired
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+		//we dont' need the datasource at all. Only JdbcTemplate needs it now. 
+		//send it to JdbcTemplate. Only less headache
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		//this.dataSource = dataSource;
 	}
 
 }
