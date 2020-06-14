@@ -2,6 +2,7 @@ package org.renuka.learn.java.aop;
 
 import org.renuka.learn.java.aop.model.Circle;
 import org.renuka.learn.java.aop.model.Triangle;
+import org.renuka.learn.java.aop.service.FactoryService;
 import org.renuka.learn.java.aop.service.ShapeService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -11,14 +12,25 @@ public class AopMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub		
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_aop.xml");
-//		aopSetup(ctx);
-//		aopWildCardDemo(ctx);
-//		aopPointCutDemo(ctx);
-//		aopJoinPointsDemo(ctx);
-//		aopAfterDemo(ctx);	
-//		aopAroundDemo(ctx);
-//		aopCustomAnnotationDemo(ctx);
-		aopXMLAnnotationDemo(ctx);
+		aopSetup(ctx);
+		aopWildCardDemo(ctx);
+		aopPointCutDemo(ctx);
+		aopJoinPointsDemo(ctx);
+		aopAfterDemo(ctx);	
+		aopAroundDemo(ctx);
+		aopCustomAnnotationDemo(ctx);
+		aopXMLAnnotationDemo(ctx);		
+		demoAopProxies();
+		
+	}
+	
+	public static void demoAopProxies() {
+		System.out.println("--------------------------------------------------------");
+		FactoryService factoryService = new FactoryService();
+		//this call actualy provides us with a ShapeServiceProxy object which is a childclass of ShapeService. 
+		ShapeService shapeService = (ShapeService)factoryService.getBean("shapeService");
+		//this will trigger our customer logging aspect method
+		Circle circle = (Circle) shapeService.getCircle();
 		
 	}
 	
