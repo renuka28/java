@@ -17,6 +17,8 @@ public class Circle {
 	private String name;
 	public Circle(int id, String name) {
 		setId(id);
-		setName(name);
+		setName(name);		
 	}
+	
+	public Circle() {}
 }
