@@ -9,6 +9,8 @@ import org.renuka.learn.java.jdbc.dao.JdbcTemplateDaoImpl;
 import org.renuka.learn.java.jdbc.model.Circle;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcDemo {
 
@@ -23,9 +25,48 @@ public class JdbcDemo {
 		demoBasicSpringJDBCTemplateRowmapper();
 		demoBasicSpringJDBCTemplateRowmapperList();
 		demoBasicSpringJDBCTemplateInsert();
+		demoBasicSpringJDBCTemplateDDLCreateTable();
+		demoSpringNamedParameterJDBCTemplateInsert();
 		
 		
 	}
+	
+	public static void demoSpringNamedParameterJDBCTemplateInsert() {	
+			
+			ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc_template.xml");
+			JdbcTemplateDaoImpl dao = ctx.getBean("jdbcTemplateDaoImpl", JdbcTemplateDaoImpl.class);
+			
+			int newCircleId = dao.getMaxCircleId() + 1;
+			String newCircleName = newCircleId + " Circle";
+			Circle circle = new Circle(newCircleId, newCircleName);
+			System.out.println("Using NamedParemeterJDBCTemplate inserting into Circle table values id = '" + circle.getId() +
+					"' name = '" + circle.getName() +"'");
+			dao.insertCircle2(circle);
+			System.out.println("inserted using NamedParemeterJDBCTemplate ... retrieving values for confirmation");
+			
+			circle = dao.getCircle2(newCircleId); 
+			System.out.println("reterived id = '" + circle.getId() +
+					"' name = '" + circle.getName().strip() +"'");	
+			System.out.println("-----------------------------------------------------------------------------------------\n");
+			((ClassPathXmlApplicationContext) ctx).close();
+		}
+	
+	public static void demoBasicSpringJDBCTemplateDDLCreateTable() {
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc_template.xml");
+		JdbcTemplateDaoImpl dao = ctx.getBean("jdbcTemplateDaoImpl", JdbcTemplateDaoImpl.class);
+		JdbcTemplate jdbcTemplate = dao.getJdbcTemplate();
+		String sql = "CREATE TABLE TRIANGLE (ID INTEGER, NAME VARCHAR(50))";
+		try {
+			jdbcTemplate.execute(sql);			
+		}catch(Exception e) {
+			System.out.println("table probably exists. Check database");
+			System.out.println(e);
+		}
+		System.out.println("-----------------------------------------------------------------------------------------\n");
+		((ClassPathXmlApplicationContext) ctx).close();
+		
+	}
+
 	
 	public static void demoBasicSpringJDBCTemplateInsert() {	
 		
@@ -43,7 +84,7 @@ public class JdbcDemo {
 		circle = dao.getCircle2(newCircleId); 
 		System.out.println("reterived id = '" + circle.getId() +
 				"' name = '" + circle.getName().strip() +"'");	
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 		((ClassPathXmlApplicationContext) ctx).close();
 	}
 	
@@ -57,7 +98,7 @@ public class JdbcDemo {
 			System.out.println("name of the circle whose id is '" + circle.getId() + 
 					"' is '" + circle.getName().strip() + "'");	
 		}
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 		((ClassPathXmlApplicationContext) ctx).close();
 	}
 	
@@ -75,7 +116,7 @@ public class JdbcDemo {
 			System.out.println("name of the circle whose id is '" + circle.getId() + 
 					"' is '" + circle.getName().strip() + "'");	
 		}
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 		((ClassPathXmlApplicationContext) ctx).close();
 	}
 	
@@ -86,7 +127,7 @@ public class JdbcDemo {
 		JdbcTemplateDaoImpl dao = ctx.getBean("jdbcTemplateDaoImpl", JdbcTemplateDaoImpl.class);		
 		System.out.println("response from Spring JDBC template getCircleCount ");
 		System.out.println("Total count of Circles = " + dao.getCircleCount());
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 		int minId = dao.getMinCircleId();
 		int maxId = dao.getMaxCircleId();
 		System.out.println("circle ids varies from '" + minId + "' to '" + maxId + "'");
@@ -96,7 +137,7 @@ public class JdbcDemo {
 					"' is '" + dao.getCircleName(i).strip() + "'");	
 		}
 		
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 		((ClassPathXmlApplicationContext) ctx).close();
 
 	}	
@@ -107,7 +148,7 @@ public class JdbcDemo {
 		Circle circle = dao.getCircle(3);
 		System.out.println("response from Spring JDBC implementation usnig org.apache.commons.dbcp2.BasicDataSource");
 		System.out.println(circle.getName().strip());
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 		((ClassPathXmlApplicationContext) ctx).close();		
 	}
 	
@@ -116,13 +157,13 @@ public class JdbcDemo {
 		Circle circle = dao.getCircle(2);
 		System.out.println("response from Spring JDBC implementation using org.springframework.jdbc.datasource.DriverManagerDataSource ");
 		System.out.println(circle.getName().strip());
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 	}
 
 	public static void demoBasicJDBC() {
 		Circle circle = new JdbcDaoImplBasic().getCircle(1);		
 		System.out.println("response from basic basic JDBC implementation ");
 		System.out.println(circle.getName().strip());
-		System.out.println("---------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");
 	}
 }
