@@ -26,6 +26,12 @@ public class UserDetails {
 	@Temporal(TemporalType.TIME)
 	private Date joinedDateTemporal;
 	
+	@Override
+	public String toString() {
+		return "UserDetails [Address=" + Address + ", description=" + description + ", joinedDate=" + joinedDate
+				+ ", joinedDateTemporal=" + joinedDateTemporal + ", userId=" + userId + ", userName=" + userName + "]";
+	}
+
 	public Date getJoinedDateTemporal() {
 		return joinedDateTemporal;
 	}
