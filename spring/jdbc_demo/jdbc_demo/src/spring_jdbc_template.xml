@@ -17,5 +17,11 @@
 		<property name="maxIdle" value="5"/>
 	</bean>
 
+	<bean id="mySimpleNamedJdbcDaoImpl" class="org.renuka.learn.java.jdbc.dao.MySimpleNamedJdbcDaoImpl">
+		<!--Since MyNamedJdbcDao inherits from NamedParameterJdbcDaoSupport which has setDataSource and getDataSource
+		methods, we can use it to wire our datasource. We just refer to the existing datasource created above  -->
+		<property name="dataSource" ref="dataSource"/>
+	
+	</bean>
 
 </beans>

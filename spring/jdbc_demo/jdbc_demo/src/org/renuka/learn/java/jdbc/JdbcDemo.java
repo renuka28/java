@@ -6,6 +6,7 @@ import org.renuka.learn.java.jdbc.dao.JdbcDaoImpl;
 
 import org.renuka.learn.java.jdbc.dao.JdbcDaoImplBasic;
 import org.renuka.learn.java.jdbc.dao.JdbcTemplateDaoImpl;
+import org.renuka.learn.java.jdbc.dao.MySimpleNamedJdbcDaoImpl;
 import org.renuka.learn.java.jdbc.model.Circle;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,10 +28,21 @@ public class JdbcDemo {
 		demoBasicSpringJDBCTemplateInsert();
 		demoBasicSpringJDBCTemplateDDLCreateTable();
 		demoSpringNamedParameterJDBCTemplateInsert();
-		
-		
+		demoSpringNamedJDBCDao();
 	}
 	
+	
+	public static void demoSpringNamedJDBCDao() {
+	
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc_template.xml");
+		MySimpleNamedJdbcDaoImpl dao = ctx.getBean("mySimpleNamedJdbcDaoImpl", MySimpleNamedJdbcDaoImpl.class);		
+		System.out.println("response from Spring MySimpleNamedJdbcDaoImpl.getCircleCount ");
+		System.out.println("Total count of Circles using MySimpleNamedJdbcDaoImpl.getCircleCount = " + dao.getCircleCount());
+		System.out.println("-----------------------------------------------------------------------------------------\n");
+		((ClassPathXmlApplicationContext) ctx).close();
+	}
+	
+
 	public static void demoSpringNamedParameterJDBCTemplateInsert() {	
 			
 			ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc_template.xml");
@@ -49,7 +61,7 @@ public class JdbcDemo {
 					"' name = '" + circle.getName().strip() +"'");	
 			System.out.println("-----------------------------------------------------------------------------------------\n");
 			((ClassPathXmlApplicationContext) ctx).close();
-		}
+	}
 	
 	public static void demoBasicSpringJDBCTemplateDDLCreateTable() {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc_template.xml");
