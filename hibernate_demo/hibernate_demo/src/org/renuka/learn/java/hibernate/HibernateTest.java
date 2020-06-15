@@ -5,8 +5,10 @@ import java.util.Date;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.renuka.learn.java.hibernate.dto.Address;
 import org.renuka.learn.java.hibernate.dto.UserDetails;
 import org.renuka.learn.java.hibernate.dto.UserDetails2;
+import org.renuka.learn.java.hibernate.dto.UserDetails3;
 
 public class HibernateTest {
 
@@ -19,8 +21,26 @@ public class HibernateTest {
 		demoInsert();
 		demoReterive();
 		demoPrimaryId();
+		demoEmbeddedValueType();
 
 	}
+	
+	public static void demoEmbeddedValueType() {
+		
+		
+		System.out.println("inserting user details to user_details3 with embedded value types");		
+		Address userAddress = new Address("dummy stree", "tx", "la", "85151");		
+		UserDetails3 user3 = new UserDetails3("user name", userAddress);
+		System.out.println(user3.toString());
+		Session session = sessionFactory.openSession();
+		//save to db
+		session.beginTransaction();
+		session.save(user3);
+		session.getTransaction().commit();			
+		session.close();	
+		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
 	
 	public static void demoPrimaryId() {
 		
