@@ -18,9 +18,8 @@ public class JdbcDemo {
 	public static void main(String[] args) {		
 		//basic jdbc demo
 		demoBasicJDBC();
-		//demo jdbc using spring
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc.xml");
-		demoBasicSpringJDBC(ctx);
+		//demo jdbc using spring		
+		demoBasicSpringJDBC();
 		demoBasicSpringJDBCWithDBCP();
 		demoBasicSpringJDBCTemplate();
 		demoBasicSpringJDBCTemplateRowmapper();
@@ -164,18 +163,22 @@ public class JdbcDemo {
 		((ClassPathXmlApplicationContext) ctx).close();		
 	}
 	
-	public static void demoBasicSpringJDBC(ApplicationContext ctx) {	
+	public static void demoBasicSpringJDBC() {	
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring_jdbc.xml");
 		JdbcDaoImpl dao = ctx.getBean("jdbcDaoImpl", JdbcDaoImpl.class);
 		Circle circle = dao.getCircle(2);
 		System.out.println("response from Spring JDBC implementation using org.springframework.jdbc.datasource.DriverManagerDataSource ");
 		System.out.println(circle.getName().strip());
 		System.out.println("-----------------------------------------------------------------------------------------\n");
+		((ClassPathXmlApplicationContext) ctx).close();
 	}
+	
 
 	public static void demoBasicJDBC() {
+		
 		Circle circle = new JdbcDaoImplBasic().getCircle(1);		
 		System.out.println("response from basic basic JDBC implementation ");
 		System.out.println(circle.getName().strip());
-		System.out.println("-----------------------------------------------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------------------------------------------\n");		
 	}
 }
