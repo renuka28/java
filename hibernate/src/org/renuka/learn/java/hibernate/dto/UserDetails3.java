@@ -1,19 +1,11 @@
 package org.renuka.learn.java.hibernate.dto;
 
-import java.util.Date;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 
 @Entity
@@ -47,8 +39,7 @@ public class UserDetails3 {
 	}
 	
 	public UserDetails3(String userName, Address address) {
-		super();
-		this.userId = userId;
+		super();		
 		this.userName = userName;
 		Address = address;
 	}

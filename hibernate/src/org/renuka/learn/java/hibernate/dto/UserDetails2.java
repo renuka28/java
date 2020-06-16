@@ -1,25 +1,20 @@
 package org.renuka.learn.java.hibernate.dto;
 
+import static javax.persistence.GenerationType.AUTO;
+
 import java.util.Date;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 
 @Entity
 @Table(name = "USER_DETAILS2")
 public class UserDetails2 {
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	@Id @GeneratedValue(strategy=AUTO)
 	private int userId;
 	private String userName;
 	private Date joinedDate;

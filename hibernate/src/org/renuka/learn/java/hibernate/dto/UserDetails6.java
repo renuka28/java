@@ -2,7 +2,6 @@ package org.renuka.learn.java.hibernate.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,8 +16,8 @@ import javax.persistence.Table;
 
 //all hibernate provided facilities
 import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 
 @Entity
@@ -35,7 +34,7 @@ public class UserDetails6 {
 	//CollectionId and @GenericGenerator are from hibernate and not from JPA
 	@GenericGenerator(name="sequencegen", strategy="sequence")
 	@CollectionId(columns= {@Column(name="ADDRESS_ID")}, generator = "sequencegen", type = @Type(type="long"))
-	private Collection<Address2> listofAddress = new ArrayList();
+	private Collection<Address2> listofAddress = new ArrayList<Address2>();
 	
 	
 	

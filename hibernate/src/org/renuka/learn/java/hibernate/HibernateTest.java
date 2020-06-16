@@ -3,11 +3,6 @@ package org.renuka.learn.java.hibernate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,6 +16,7 @@ import org.renuka.learn.java.hibernate.dto.UserDetails4;
 import org.renuka.learn.java.hibernate.dto.UserDetails5;
 import org.renuka.learn.java.hibernate.dto.UserDetails6;
 import org.renuka.learn.java.hibernate.dto.UserDetails7;
+import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
 
 public class HibernateTest {
 
@@ -37,6 +33,28 @@ public class HibernateTest {
 		demoList();
 		demoListWithUserList6();
 		demoLazyInitializationWithUserList7();
+		
+		
+		demoOneToOneMapping();
+		
+	}
+	
+	public static void demoOneToOneMapping(){
+		Session session = sessionFactory.openSession();
+		
+		System.out.println("this method demos one to one entity mapping");
+		UserDetailsOneToOneMapping userOneToOne = new UserDetailsOneToOneMapping();		
+		userOneToOne.setUserName("UserDetailsOneToOneMapping with one to one entity mapping");		
+		System.out.println(userOneToOne);
+		
+		session.beginTransaction();		
+		session.save(userOneToOne);
+		System.out.println("userOneToOne saved successful. Retriving ....");
+		session.getTransaction().commit();
+		
+		
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoLazyInitializationWithUserList7() {
@@ -54,7 +72,7 @@ public class HibernateTest {
 		
 		session.beginTransaction();		
 		session.save(user7);
-		System.out.println("user7 saving successful. Retriving ....");
+		System.out.println("user7 saved successful. Retriving ....");
 		session.getTransaction().commit();		
 		session.close();	
 		
@@ -211,7 +229,7 @@ public class HibernateTest {
 	
 	public static ArrayList<Address2> GetDummyAddresses(){
 		
-		ArrayList<Address2> listofAddress = new ArrayList();
+		ArrayList<Address2> listofAddress = new ArrayList<Address2>();
 		listofAddress.add(new Address2("dummy home street", "home-tx", "home-la", "home-85151"));				
 		listofAddress.add(new Address2("dummy office street", "office-tx", "office-la", "office-85151"));
 		listofAddress.add(new Address2("dummy old home street", "old-home-tx", "old-home-la", "old-home-85151"));

@@ -2,10 +2,8 @@ package org.renuka.learn.java.hibernate.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,11 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Table;
-
-//all hibernate provided facilities
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
@@ -31,7 +24,7 @@ public class UserDetails7 {
 	private String userName;
 	@ElementCollection(fetch=FetchType.EAGER)
 	@JoinTable(name="USER_ADDRESS2", joinColumns=@JoinColumn(name="USER_ID"))
-	private Collection<Address2> listofAddress = new ArrayList();
+	private Collection<Address2> listofAddress = new ArrayList<Address2>();
 	
 	
 	

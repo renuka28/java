@@ -1,9 +1,5 @@
 package org.renuka.learn.java.hibernate.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,15 +8,12 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "USER_DETAILS5")
-public class UserDetails5 {
+@Table(name = "USER_DETAILS_ONE_TO_ONE")
+public class UserDetailsOneToOneMapping {
 	
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private int userId;
 	private String userName;
-	@ElementCollection
-	private Set<Address2> listofAddress = new HashSet<Address2>();
-	
 	
 	
 	public int getUserId() {
@@ -36,25 +29,15 @@ public class UserDetails5 {
 		this.userName = userName;
 	}
 	
-	public UserDetails5() {super();}
-	public UserDetails5(int userId, String userName, Set<Address2> listofAddress) {
+	public UserDetailsOneToOneMapping() {super();}
+	public UserDetailsOneToOneMapping(int userId, String userName) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
-		this.listofAddress = listofAddress;
+		
 	}
 	@Override
 	public String toString() {
-		return "UserDetails5 [userId=" + userId + ", userName=" + userName + ", listofAddress=" + listofAddress + "]";
+		return "UserDetails7 [userId=" + userId + ", userName=" + userName + "]";
 	}
-	public Set<Address2> getListofAddress() {
-		return listofAddress;
-	}
-	public void setListofAddress(Set<Address2> listofAddress) {
-		this.listofAddress = listofAddress;
-	}
-	
-	
-	
-
 }
