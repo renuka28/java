@@ -1,6 +1,8 @@
 package org.renuka.learn.java.hibernate;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,13 +13,13 @@ import org.renuka.learn.java.hibernate.dto.UserDetails;
 import org.renuka.learn.java.hibernate.dto.UserDetails2;
 import org.renuka.learn.java.hibernate.dto.UserDetails3;
 import org.renuka.learn.java.hibernate.dto.UserDetails4;
+import org.renuka.learn.java.hibernate.dto.UserDetails5;
 
 public class HibernateTest {
 
 	private static SessionFactory sessionFactory = null;
 	private static int currentUserId = 1;
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) {		
 		 
 		setupSessionFactoryDB();
 		demoInsert();
@@ -25,7 +27,35 @@ public class HibernateTest {
 		demoPrimaryId();
 		demoEmbeddedValueType();
 		demoEmbeddedValueType2();
+		demoList();
 
+	}
+	
+	public static void demoList() {
+		
+		
+		System.out.println("inserting user details to user_details5 which stores Address2 using HashSet");		
+		Address2 homeAddress = new Address2("dummy home street", "home-tx", "home-la", "home-85151");
+		Address2 oldHomeAddress = new Address2("dummy old home street", "old-home-tx", "old-home-la", "old-home-85151");		
+		Address2 officeAddress = new Address2("dummy office street", "office-tx", "office-la", "office-85151");
+		Address2 oldOOfficeAddress = new Address2("dummy old-office street", "old-office-tx", "old-office-la", "old-office-85151");
+		UserDetails5 user5 = new UserDetails5();
+		user5.setUserName("User with variable number of addresses");		
+		HashSet<Address2> userAddresses = (HashSet<Address2>) user5.getListofAddress();
+		
+		userAddresses.add(homeAddress);
+		userAddresses.add(oldHomeAddress);
+		userAddresses.add(officeAddress);
+		userAddresses.add(oldOOfficeAddress);
+		user5.setListofAddress(userAddresses);
+		
+		Session session = sessionFactory.openSession();
+		//save to db
+		session.beginTransaction();
+		session.save(user5);
+		session.getTransaction().commit();			
+		session.close();	
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoEmbeddedValueType2() {
@@ -120,3 +150,4 @@ public class HibernateTest {
 	}
 
 }
+
