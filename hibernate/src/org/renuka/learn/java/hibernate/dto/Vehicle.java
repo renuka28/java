@@ -10,6 +10,8 @@ public class Vehicle {
 	public int vehicleId;
 	private String vehicleName;
 	
+
+	
 	
 	public int getVehicleId() {
 		return vehicleId;
@@ -27,9 +29,8 @@ public class Vehicle {
 	public String toString() {
 		return "Vehicle [vehicleId=" + vehicleId + ", vehicleName=" + vehicleName + "]";
 	}
-	public Vehicle(int vehicleId, String vehicleName) {
-		super();
-		this.vehicleId = vehicleId;
+	public Vehicle(String vehicleName) {
+		super();		
 		this.vehicleName = vehicleName;
 	}
 	public Vehicle() {

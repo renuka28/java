@@ -17,6 +17,7 @@ import org.renuka.learn.java.hibernate.dto.UserDetails5;
 import org.renuka.learn.java.hibernate.dto.UserDetails6;
 import org.renuka.learn.java.hibernate.dto.UserDetails7;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
+import org.renuka.learn.java.hibernate.dto.Vehicle;
 
 public class HibernateTest {
 
@@ -25,6 +26,7 @@ public class HibernateTest {
 	public static void main(String[] args) {		
 		 
 		setupSessionFactoryDB();
+		
 		demoInsert();
 		demoReterive();
 		demoPrimaryId();
@@ -33,25 +35,31 @@ public class HibernateTest {
 		demoList();
 		demoListWithUserList6();
 		demoLazyInitializationWithUserList7();
+		demoOneToOneMapping();	
 		
-		
-		demoOneToOneMapping();
+		writeSummary();
 		
 	}
 	
 	public static void demoOneToOneMapping(){
 		Session session = sessionFactory.openSession();
 		
-		System.out.println("this method demos one to one entity mapping");
-		UserDetailsOneToOneMapping userOneToOne = new UserDetailsOneToOneMapping();		
-		userOneToOne.setUserName("UserDetailsOneToOneMapping with one to one entity mapping");		
+		System.out.println("this method demos one to one entity mapping");				
+		Vehicle vehicle = new Vehicle("Ford expedition");		
+		UserDetailsOneToOneMapping userOneToOne = new UserDetailsOneToOneMapping(
+				"UserDetailsOneToOneMapping with one to one entity mapping",
+				vehicle);
 		System.out.println(userOneToOne);
 		
 		session.beginTransaction();		
 		session.save(userOneToOne);
-		System.out.println("userOneToOne saved successful. Retriving ....");
+		session.save(vehicle);
+		System.out.println("userOneToOne and Vehicle saved successfully....");
 		session.getTransaction().commit();
 		
+		System.out.println("reading from db");
+		UserDetailsOneToOneMapping userOneToOneRead = session.get(UserDetailsOneToOneMapping.class, userOneToOne.getUserId());
+		System.out.println(userOneToOneRead.toString());
 		
 		session.close();
 		System.out.println("-----------------------------------------------------------------------------\n");
@@ -226,6 +234,15 @@ public class HibernateTest {
 
 	
 	}
+	
+	public static void writeSummary() {
+		
+		System.out.println("All data written to -  : "
+					+ sessionFactory.getProperties().get("hibernate.connection.url"));
+		System.out.println("-----------------------------------------------------------------------------\n");	
+		
+	}
+	
 	
 	public static ArrayList<Address2> GetDummyAddresses(){
 		
