@@ -6,9 +6,10 @@ import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 public class VehicleManyToMany {
@@ -25,6 +26,8 @@ public class VehicleManyToMany {
 	
 	//this allows us to have a many to one so that we can get the user associated with the given vehicle
 	@ManyToMany(mappedBy="vehicles")
+	//Hibernate specific functionatlity to ignore any error if the user does not have a vehicle
+	@NotFound(action=NotFoundAction.IGNORE)
 	private Collection<UserDetailsManyToMany> userList = new ArrayList<UserDetailsManyToMany>();
 	
 	

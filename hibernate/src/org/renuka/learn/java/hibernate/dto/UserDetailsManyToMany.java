@@ -7,11 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 
 @Entity
@@ -26,6 +26,8 @@ public class UserDetailsManyToMany {
 	//added optional tags to customize the table created for joining both the entities. 
 	//if nothing specified it will create it as entity1_entity2 for eg USER_DETAILS_ONE_TO_MANY_Vehicle
 	@ManyToMany
+	//Hibernate specific functionatlity to ignore any error if the user does not have a vehicle
+	@NotFound(action=NotFoundAction.IGNORE)
 	private Collection<VehicleManyToMany> vehicles = new ArrayList<VehicleManyToMany>();
 	
 	
