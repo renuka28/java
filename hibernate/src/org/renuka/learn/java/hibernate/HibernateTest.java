@@ -16,10 +16,12 @@ import org.renuka.learn.java.hibernate.dto.UserDetails4;
 import org.renuka.learn.java.hibernate.dto.UserDetails5;
 import org.renuka.learn.java.hibernate.dto.UserDetails6;
 import org.renuka.learn.java.hibernate.dto.UserDetails7;
+import org.renuka.learn.java.hibernate.dto.UserDetailsCascadeTypes;
 import org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
 import org.renuka.learn.java.hibernate.dto.Vehicle;
+import org.renuka.learn.java.hibernate.dto.VehicleCascadeTypes;
 import org.renuka.learn.java.hibernate.dto.VehicleManyToMany;
 import org.renuka.learn.java.hibernate.dto.VehicleOneToMany;
 
@@ -42,9 +44,42 @@ public class HibernateTest {
 		demoOneToOneMapping();
 		demoOneToManyToOneMapping();
 		demoOneToManyToManyMapping();
-		
+		demoCascadeType();
+				
 		writeSummary();
 		
+	}
+	
+	public static void demoCascadeType(){
+		Session session = sessionFactory.openSession();
+		
+		System.out.println("this method demos CascadingTypes");				
+		UserDetailsCascadeTypes userCascadingStyles = new UserDetailsCascadeTypes("UserDetailsManyToMany User 1");
+		VehicleCascadeTypes tahoe = new VehicleCascadeTypes("Tahoe");		
+		VehicleCascadeTypes ford = new VehicleCascadeTypes("Expedition");	
+		
+		//add users to vehiciles
+		userCascadingStyles.getVehicles().add(tahoe);
+		userCascadingStyles.getVehicles().add(ford);
+		
+		System.out.println(userCascadingStyles);
+		session.beginTransaction();		
+		//no more we need to save these two instances as we asked Hibernate to cascade save
+//		session.save(tahoe);
+//		session.save(ford);
+		//change save to persist
+//		session.save(userCascadingStyles);
+		session.persist(userCascadingStyles);
+		session.getTransaction().commit();
+		
+		System.out.println("UserDetailsManyToMany and Vehicle saved successfully....");		
+		
+		System.out.println("reading from db...");		
+		UserDetailsCascadeTypes userCascadingStylesRead = session.get(UserDetailsCascadeTypes.class, userCascadingStyles.getUserId());
+		System.out.println("read user details...");
+		System.out.println(userCascadingStylesRead.toString());				
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoOneToManyToManyMapping(){
