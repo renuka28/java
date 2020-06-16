@@ -41,6 +41,10 @@ public class Address {
 		this.pincode = pincode;
 	}
 	public Address() {super();}
+	@Override
+	public String toString() {
+		return "Address [street=" + street + ", city=" + city + ", state=" + state + ", pincode=" + pincode + "]";
+	}
 	
 	
 

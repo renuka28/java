@@ -45,6 +45,7 @@ public class UserDetails3 {
 	public void setAddress(Address address) {
 		Address = address;
 	}
+	
 	public UserDetails3(String userName, Address address) {
 		super();
 		this.userId = userId;
@@ -54,6 +55,9 @@ public class UserDetails3 {
 	@Override
 	public String toString() {
 		return "UserDetails3 [userId=" + userId + ", userName=" + userName + ", Address=" + Address + "]";
+	}
+	public UserDetails3() {
+		super();
 	}
 	
 	

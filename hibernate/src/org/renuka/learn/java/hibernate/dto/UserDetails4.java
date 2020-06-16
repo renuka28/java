@@ -79,6 +79,9 @@ public class UserDetails4 {
 	}
 	
 	
+	public UserDetails4() {
+		super();
+	}
 	
 	
 
