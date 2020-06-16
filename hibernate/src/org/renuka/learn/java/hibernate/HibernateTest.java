@@ -16,8 +16,10 @@ import org.renuka.learn.java.hibernate.dto.UserDetails4;
 import org.renuka.learn.java.hibernate.dto.UserDetails5;
 import org.renuka.learn.java.hibernate.dto.UserDetails6;
 import org.renuka.learn.java.hibernate.dto.UserDetails7;
+import org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
 import org.renuka.learn.java.hibernate.dto.Vehicle;
+import org.renuka.learn.java.hibernate.dto.VehicleOneToMany;
 
 public class HibernateTest {
 
@@ -35,17 +37,56 @@ public class HibernateTest {
 		demoList();
 		demoListWithUserList6();
 		demoLazyInitializationWithUserList7();
-		demoOneToOneMapping();	
+		demoOneToOneMapping();
+		demoOneToManyToOneMapping();
 		
 		writeSummary();
 		
+	}
+	
+	public static void demoOneToManyToOneMapping(){
+		Session session = sessionFactory.openSession();
+		
+		System.out.println("this method demos one to many and many to one entity mapping");				
+		
+		
+		UserDetailsOneToManyToOneMapping userOneToMany = new UserDetailsOneToManyToOneMapping();
+		userOneToMany.setUserName("UserDetailsOneToManyToOneMapping with one to many and many to entity mapping");
+		VehicleOneToMany tahoe = new VehicleOneToMany("Tahoe", userOneToMany);		
+		VehicleOneToMany ford = new VehicleOneToMany("Expedition", userOneToMany);		
+		
+		userOneToMany.getVehicles().add(tahoe);
+		userOneToMany.getVehicles().add(ford);
+		
+		System.out.println(userOneToMany);
+		session.beginTransaction();		
+		session.save(userOneToMany);
+		session.save(tahoe);
+		session.save(ford);
+		session.getTransaction().commit();
+		
+		System.out.println("UserDetailsOneToManyToOneMapping and Vehicle saved successfully....");		
+		
+		System.out.println("reading from db...");		
+		UserDetailsOneToManyToOneMapping userOneToManyRead = session.get(UserDetailsOneToManyToOneMapping.class, userOneToMany.getUserId());
+		System.out.println("read user details...");
+		System.out.println(userOneToManyRead.toString());
+		System.out.println("User of '" + userOneToManyRead.getVehicleAt(0).getVehicleName() + "' is '" 
+				+ userOneToManyRead.getVehicleAt(0).getUser().getUserName() +"'");
+		System.out.println("User of '" + userOneToManyRead.getVehicleAt(1).getVehicleName() + "' is '" 
+				+ userOneToManyRead.getVehicleAt(1).getUser().getUserName() +"'");
+
+		
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoOneToOneMapping(){
 		Session session = sessionFactory.openSession();
 		
 		System.out.println("this method demos one to one entity mapping");				
-		Vehicle vehicle = new Vehicle("Ford expedition");		
+		Vehicle vehicle = new Vehicle();
+		vehicle.setVehicleName("Ford expedition");
 		UserDetailsOneToOneMapping userOneToOne = new UserDetailsOneToOneMapping(
 				"UserDetailsOneToOneMapping with one to one entity mapping",
 				vehicle);
@@ -237,7 +278,7 @@ public class HibernateTest {
 	
 	public static void writeSummary() {
 		
-		System.out.println("All data written to -  : "
+		System.out.println("All data committed to -  : "
 					+ sessionFactory.getProperties().get("hibernate.connection.url"));
 		System.out.println("-----------------------------------------------------------------------------\n");	
 		
@@ -256,4 +297,5 @@ public class HibernateTest {
 	}
 
 }
+
 

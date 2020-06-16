@@ -30,17 +30,7 @@
         <property name="show_sql">true</property>
         <property name="hbm2ddl.auto">create</property>        
         
-        
-        <!-- our model classes -->
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails2"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails3"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails4"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails5"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails6"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails7"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.Vehicle"/>
+     
         
         
     </session-factory>
