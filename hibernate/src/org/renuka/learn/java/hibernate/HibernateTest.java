@@ -16,9 +16,11 @@ import org.renuka.learn.java.hibernate.dto.UserDetails4;
 import org.renuka.learn.java.hibernate.dto.UserDetails5;
 import org.renuka.learn.java.hibernate.dto.UserDetails6;
 import org.renuka.learn.java.hibernate.dto.UserDetails7;
+import org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
 import org.renuka.learn.java.hibernate.dto.Vehicle;
+import org.renuka.learn.java.hibernate.dto.VehicleManyToMany;
 import org.renuka.learn.java.hibernate.dto.VehicleOneToMany;
 
 public class HibernateTest {
@@ -39,9 +41,47 @@ public class HibernateTest {
 		demoLazyInitializationWithUserList7();
 		demoOneToOneMapping();
 		demoOneToManyToOneMapping();
+		demoOneToManyToManyMapping();
 		
 		writeSummary();
 		
+	}
+	
+	public static void demoOneToManyToManyMapping(){
+		Session session = sessionFactory.openSession();
+		
+		System.out.println("this method demos many to many entity mapping");				
+		
+		
+		UserDetailsManyToMany usermanyToMany = new UserDetailsManyToMany();
+		usermanyToMany.setUserName("UserDetailsManyToMany with many to many entity mapping");
+		VehicleManyToMany tahoe = new VehicleManyToMany("Tahoe", usermanyToMany);		
+		VehicleManyToMany ford = new VehicleManyToMany("Expedition", usermanyToMany);		
+		
+		usermanyToMany.getVehicles().add(tahoe);
+		usermanyToMany.getVehicles().add(ford);
+		
+		System.out.println(usermanyToMany);
+		session.beginTransaction();		
+		session.save(usermanyToMany);
+		session.save(tahoe);
+		session.save(ford);
+		session.getTransaction().commit();
+		
+		System.out.println("UserDetailsOneToManyToOneMapping and Vehicle saved successfully....");		
+		
+		System.out.println("reading from db...");		
+		UserDetailsManyToMany userOneToManyRead = session.get(UserDetailsManyToMany.class, usermanyToMany.getUserId());
+		System.out.println("read user details...");
+		System.out.println(userOneToManyRead.toString());
+		System.out.println("User of '" + userOneToManyRead.getVehicleAt(0).getVehicleName() + "' is '" 
+				+ userOneToManyRead.getVehicleAt(0).getUser().getUserName() +"'");
+		System.out.println("User of '" + userOneToManyRead.getVehicleAt(1).getVehicleName() + "' is '" 
+				+ userOneToManyRead.getVehicleAt(1).getUser().getUserName() +"'");
+
+		
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoOneToManyToOneMapping(){

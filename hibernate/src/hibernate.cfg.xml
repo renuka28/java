@@ -39,8 +39,10 @@
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails7"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.Vehicle"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleOneToMany"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.VehicleManyToMany"/>
                 
     </session-factory>
  
