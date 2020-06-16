@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -24,10 +25,14 @@ public class UserDetailsManyToMany {
 	//if this was a value type we can use @Embeddable and @Embedded tags
 	//added optional tags to customize the table created for joining both the entities. 
 	//if nothing specified it will create it as entity1_entity2 for eg USER_DETAILS_ONE_TO_MANY_Vehicle
-	@OneToMany(mappedBy="user")
+	@ManyToMany
 	private Collection<VehicleManyToMany> vehicles = new ArrayList<VehicleManyToMany>();
 	
 	
+	public UserDetailsManyToMany(String userName) {
+		super();
+		this.userName = userName;
+	}
 	public Collection<VehicleManyToMany> getVehicles() {
 		return vehicles;
 	}
@@ -46,14 +51,15 @@ public class UserDetailsManyToMany {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	@Override
-	public String toString() {
-		return "UserDetailsOneToManyToOneMapping [userId=" + userId + ", userName=" + userName + ", vehicles=" + vehicles
-				+ "]";
-	}
 
 	public VehicleManyToMany getVehicleAt(int id) {
 		return (VehicleManyToMany) vehicles.toArray()[id];
 	}
+	@Override
+	public String toString() {
+		return "UserDetailsManyToMany [userId=" + userId + ", userName=" + userName + ", vehicles=" + vehicles + "]";
+	}
+	
+	
 
 }

@@ -53,31 +53,48 @@ public class HibernateTest {
 		System.out.println("this method demos many to many entity mapping");				
 		
 		
-		UserDetailsManyToMany usermanyToMany = new UserDetailsManyToMany();
-		usermanyToMany.setUserName("UserDetailsManyToMany with many to many entity mapping");
-		VehicleManyToMany tahoe = new VehicleManyToMany("Tahoe", usermanyToMany);		
-		VehicleManyToMany ford = new VehicleManyToMany("Expedition", usermanyToMany);		
+		UserDetailsManyToMany usermanyToMany1 = new UserDetailsManyToMany("UserDetailsManyToMany User 1");
+		UserDetailsManyToMany usermanyToMany2 = new UserDetailsManyToMany("UserDetailsManyToMany User 2");
 		
-		usermanyToMany.getVehicles().add(tahoe);
-		usermanyToMany.getVehicles().add(ford);
+		VehicleManyToMany tahoe = new VehicleManyToMany("Tahoe");		
+		VehicleManyToMany ford = new VehicleManyToMany("Expedition");	
 		
-		System.out.println(usermanyToMany);
+		//add users to vehiciles
+		usermanyToMany1.getVehicles().add(tahoe);
+		usermanyToMany1.getVehicles().add(ford);
+		
+		usermanyToMany2.getVehicles().add(tahoe);
+		usermanyToMany2.getVehicles().add(ford);
+		
+		tahoe.getUserList().add(usermanyToMany1);
+		tahoe.getUserList().add(usermanyToMany2);
+		ford.getUserList().add(usermanyToMany1);
+		ford.getUserList().add(usermanyToMany2);
+		
+		
+		System.out.println(usermanyToMany1);
+		System.out.println(usermanyToMany2);
 		session.beginTransaction();		
-		session.save(usermanyToMany);
+		session.save(usermanyToMany1);
+		session.save(usermanyToMany2);
 		session.save(tahoe);
 		session.save(ford);
 		session.getTransaction().commit();
 		
-		System.out.println("UserDetailsOneToManyToOneMapping and Vehicle saved successfully....");		
+		System.out.println("UserDetailsManyToMany and Vehicle saved successfully....");		
 		
 		System.out.println("reading from db...");		
-		UserDetailsManyToMany userOneToManyRead = session.get(UserDetailsManyToMany.class, usermanyToMany.getUserId());
+		UserDetailsManyToMany userOneToManyRead = session.get(UserDetailsManyToMany.class, usermanyToMany1.getUserId());
 		System.out.println("read user details...");
 		System.out.println(userOneToManyRead.toString());
 		System.out.println("User of '" + userOneToManyRead.getVehicleAt(0).getVehicleName() + "' is '" 
-				+ userOneToManyRead.getVehicleAt(0).getUser().getUserName() +"'");
+				+ userOneToManyRead.getVehicleAt(0).getUserAt(0).getUserName() +"'");
 		System.out.println("User of '" + userOneToManyRead.getVehicleAt(1).getVehicleName() + "' is '" 
-				+ userOneToManyRead.getVehicleAt(1).getUser().getUserName() +"'");
+				+ userOneToManyRead.getVehicleAt(0).getUserAt(0).getUserName() +"'");
+		System.out.println("User of '" + userOneToManyRead.getVehicleAt(0).getVehicleName() + "' is '" 
+				+ userOneToManyRead.getVehicleAt(1).getUserAt(0).getUserName() +"'");
+		System.out.println("User of '" + userOneToManyRead.getVehicleAt(1).getVehicleName() + "' is '" 
+				+ userOneToManyRead.getVehicleAt(1).getUserAt(1).getUserName() +"'");
 
 		
 		session.close();
