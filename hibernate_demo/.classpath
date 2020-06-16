@@ -8,5 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/hibernate-5.4.17.Final-All"/>
 	<classpathentry kind="lib" path="S:/Renuka/Renuka-Data/Personal/Learning/java/libraries/postgres/postgresql-42.2.14.jar"/>
+	<classpathentry kind="lib" path="S:/Renuka/Renuka-Data/Personal/Learning/java/libraries/mysql/mysql-connector-java-8.0.19/mysql-connector-java-8.0.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
