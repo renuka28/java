@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Vehicle {
+public class Vehicle2 {
 	@Id @GeneratedValue
 	public int vehicleId;
 	private String vehicleName;
@@ -27,11 +27,11 @@ public class Vehicle {
 	public String toString() {
 		return "Vehicle [vehicleId=" + vehicleId + ", vehicleName=" + vehicleName + "]";
 	}
-	public Vehicle(String vehicleName) {
+	public Vehicle2(String vehicleName) {
 		super();		
 		this.vehicleName = vehicleName;
 	}
-	public Vehicle() {
+	public Vehicle2() {
 		super();
 	}
 	

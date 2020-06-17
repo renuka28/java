@@ -42,6 +42,9 @@
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsCascadeTypes"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.Vehicle"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.Vehicle2"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheeler"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheeler"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleOneToMany"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleManyToMany"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleCascadeTypes"/>

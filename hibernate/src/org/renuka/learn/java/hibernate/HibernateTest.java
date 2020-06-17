@@ -9,6 +9,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.renuka.learn.java.hibernate.dto.Address;
 import org.renuka.learn.java.hibernate.dto.Address2;
+import org.renuka.learn.java.hibernate.dto.FourWheeler;
+import org.renuka.learn.java.hibernate.dto.TwoWheeler;
 import org.renuka.learn.java.hibernate.dto.UserDetails;
 import org.renuka.learn.java.hibernate.dto.UserDetails2;
 import org.renuka.learn.java.hibernate.dto.UserDetails3;
@@ -21,6 +23,7 @@ import org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
 import org.renuka.learn.java.hibernate.dto.Vehicle;
+import org.renuka.learn.java.hibernate.dto.Vehicle2;
 import org.renuka.learn.java.hibernate.dto.VehicleCascadeTypes;
 import org.renuka.learn.java.hibernate.dto.VehicleManyToMany;
 import org.renuka.learn.java.hibernate.dto.VehicleOneToMany;
@@ -45,9 +48,37 @@ public class HibernateTest {
 		demoOneToManyToOneMapping();
 		demoOneToManyToManyMapping();
 		demoCascadeType();
+		
+		//inheritance
+		demoSingleTableInheritance();
 				
 		writeSummary();
 		
+	}
+	
+	public static void demoSingleTableInheritance(){
+		Session session = sessionFactory.openSession();
+		System.out.println("this method demos basic single table inheritance inheritance."
+				+ "\nHibernate will create a single table with base class names and add additoinal columns to take care of"
+				+ "\nadditional variables in the inherited classes");		
+		
+		Vehicle2 bus = new Vehicle2("Bus");
+		TwoWheeler splendor = new TwoWheeler("Splendor", "Bike Steering Handle");
+		FourWheeler ford = new FourWheeler("Expedition", "Ford steering wheel");	
+		
+		System.out.println("Saving vehicles - ");
+		System.out.println(bus);
+		System.out.println(splendor);
+		System.out.println(ford + "\n");
+		
+		session.beginTransaction();
+		session.save(bus);
+		session.save(splendor);
+		session.save(ford);
+		session.getTransaction().commit();
+		System.out.println("\nVehicles saved successfully....");	
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoCascadeType(){
@@ -62,7 +93,7 @@ public class HibernateTest {
 		userCascadingStyles.getVehicles().add(tahoe);
 		userCascadingStyles.getVehicles().add(ford);
 		
-		System.out.println(userCascadingStyles);
+		System.out.println(userCascadingStyles +"\n");
 		session.beginTransaction();		
 		//no more we need to save these two instances as we asked Hibernate to cascade save
 //		session.save(tahoe);
@@ -72,7 +103,7 @@ public class HibernateTest {
 		session.persist(userCascadingStyles);
 		session.getTransaction().commit();
 		
-		System.out.println("UserDetailsManyToMany and Vehicle saved successfully....");		
+		System.out.println("\nUserDetailsManyToMany and Vehicle saved successfully....");		
 		
 		System.out.println("reading from db...");		
 		UserDetailsCascadeTypes userCascadingStylesRead = session.get(UserDetailsCascadeTypes.class, userCascadingStyles.getUserId());
@@ -108,7 +139,7 @@ public class HibernateTest {
 		
 		
 		System.out.println(usermanyToMany1);
-		System.out.println(usermanyToMany2);
+		System.out.println(usermanyToMany2 + "\n");
 		session.beginTransaction();		
 		session.save(usermanyToMany1);
 		session.save(usermanyToMany2);
@@ -116,7 +147,7 @@ public class HibernateTest {
 		session.save(ford);
 		session.getTransaction().commit();
 		
-		System.out.println("UserDetailsManyToMany and Vehicle saved successfully....");		
+		System.out.println("\nUserDetailsManyToMany and Vehicle saved successfully....");		
 		
 		System.out.println("reading from db...");		
 		UserDetailsManyToMany userOneToManyRead = session.get(UserDetailsManyToMany.class, usermanyToMany1.getUserId());
@@ -150,14 +181,14 @@ public class HibernateTest {
 		userOneToMany.getVehicles().add(tahoe);
 		userOneToMany.getVehicles().add(ford);
 		
-		System.out.println(userOneToMany);
+		System.out.println(userOneToMany + "\n");
 		session.beginTransaction();		
 		session.save(userOneToMany);
 		session.save(tahoe);
 		session.save(ford);
 		session.getTransaction().commit();
 		
-		System.out.println("UserDetailsOneToManyToOneMapping and Vehicle saved successfully....");		
+		System.out.println("\nUserDetailsOneToManyToOneMapping and Vehicle saved successfully....");		
 		
 		System.out.println("reading from db...");		
 		UserDetailsOneToManyToOneMapping userOneToManyRead = session.get(UserDetailsOneToManyToOneMapping.class, userOneToMany.getUserId());
@@ -182,12 +213,12 @@ public class HibernateTest {
 		UserDetailsOneToOneMapping userOneToOne = new UserDetailsOneToOneMapping(
 				"UserDetailsOneToOneMapping with one to one entity mapping",
 				vehicle);
-		System.out.println(userOneToOne);
+		System.out.println(userOneToOne + "\n");
 		
 		session.beginTransaction();		
 		session.save(userOneToOne);
 		session.save(vehicle);
-		System.out.println("userOneToOne and Vehicle saved successfully....");
+		System.out.println("\nuserOneToOne and Vehicle saved successfully....");
 		session.getTransaction().commit();
 		
 		System.out.println("reading from db");
@@ -206,17 +237,16 @@ public class HibernateTest {
 				+ "proxy object.");
 		UserDetails7 user7 = new UserDetails7();
 				
-		user7.setUserName("User7 with variable number of addresses");		
+		user7.setUserName("User7 with variable number of addresses" + "\n");		
 		Collection<Address2> listofAddress = GetDummyAddresses();
 		user7.getListofAddress().addAll(listofAddress);
 		
 		
 		session.beginTransaction();		
 		session.save(user7);
-		System.out.println("user7 saved successful. Retriving ....");
 		session.getTransaction().commit();		
 		session.close();	
-		
+		System.out.println("\nuser7 saved successful. Retriving ....");
 		session = sessionFactory.openSession();
 		//this call will not fetch list of address of default as it is in another table
 		//if we use any method that requires the listOfAddresses, then hibernate will fetch as needed
@@ -242,7 +272,7 @@ public class HibernateTest {
 		
 		System.out.println("inserting user details to user_details6 which stores Address2 using HashSet");		
 			UserDetails6 user6 = new UserDetails6();
-		user6.setUserName("User6 with variable number of addresses");		
+		user6.setUserName("User6 with variable number of addresses" + "\n");		
 		Collection<Address2> listofAddress = GetDummyAddresses();
 		user6.getListofAddress().addAll(listofAddress);
 		
@@ -252,7 +282,7 @@ public class HibernateTest {
 		session.save(user6);
 		session.getTransaction().commit();			
 		session.close();	
-		System.out.println("saved user ..");
+		System.out.println("\nsaved user ..");
 		System.out.println(user6);
 		System.out.println("-----------------------------------------------------------------------------\n");
 	}
@@ -264,7 +294,7 @@ public class HibernateTest {
 		UserDetails5 user5 = new UserDetails5();
 		Collection<Address2> listofAddress = GetDummyAddresses();
 		user5.getListofAddress().addAll(listofAddress);
-		user5.setUserName("User5 with variable number of addresses");		
+		user5.setUserName("User5 with variable number of addresses" + "\n");		
 		
 		Session session = sessionFactory.openSession();
 		//save to db
@@ -272,7 +302,7 @@ public class HibernateTest {
 		session.save(user5);
 		session.getTransaction().commit();			
 		session.close();	
-		System.out.println("saved user ..");
+		System.out.println("\nsaved user ..");
 		System.out.println(user5);
 		System.out.println("-----------------------------------------------------------------------------\n");
 	}
@@ -284,7 +314,7 @@ public class HibernateTest {
 		ArrayList<Address2> listofAddress = GetDummyAddresses();		
 		UserDetails4 user4 = new UserDetails4("user4 name", listofAddress.get(0), listofAddress.get(1) );
 		
-		System.out.println(user4.toString());
+		System.out.println(user4.toString() + "\n");
 		Session session = sessionFactory.openSession();
 		//save to db
 		session.beginTransaction();
@@ -300,7 +330,7 @@ public class HibernateTest {
 		System.out.println("inserting user details to user_details3 with embedded value types");		
 		Address userAddress = new Address("dummy stree", "tx", "la", "85151");		
 		UserDetails3 user3 = new UserDetails3("user name", userAddress);
-		System.out.println(user3.toString());
+		System.out.println(user3.toString() + "\n");
 		Session session = sessionFactory.openSession();
 		//save to db
 		session.beginTransaction();
@@ -389,5 +419,6 @@ public class HibernateTest {
 	}
 
 }
+
 
 
