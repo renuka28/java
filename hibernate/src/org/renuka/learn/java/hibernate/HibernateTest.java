@@ -65,8 +65,41 @@ public class HibernateTest {
 		//CRUD
 		demoCrud();		
 		
+		demoTransientPersistentDetached();
+		
 		writeSummary();
 	}
+	
+	public static void demoTransientPersistentDetached(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoTransientPersistentDetached - this method demos Transiient, Persistent and Detached objects");		
+		
+		UserDetailsCrud userDetailsTransient = new UserDetailsCrud(100, "User Details Transient - This WILL NOT be saved to db as we will"
+				+ " not hande over this object to sesson.save() ");
+		System.out.println(userDetailsTransient);
+		
+		UserDetailsCrud userDetailsPersistent = new UserDetailsCrud(200, "User Details Persistent - "
+				+ "This will be saved to db and its changes will be tracked until we call session.close()");
+		session.beginTransaction();
+		session.save(userDetailsPersistent);
+		
+		System.out.println("\n"  + userDetailsPersistent + "record saved to UserDetailsCrud table successfully....\n");
+		
+		System.out.println("updating " + userDetailsPersistent + " user name to - 'Persistent object updated without calling session.save()'");
+		userDetailsPersistent.setUserName("Won't be saved - only last update saved");
+		userDetailsPersistent.setUserName("Persistent object updated without calling session.save()");
+		System.out.println("exiting witout calling session.save(). Hibernate will have updated the table");
+		
+		session.getTransaction().commit();
+		session.close();
+		
+		System.out.println("updating " + userDetailsPersistent + " user name to - 'Detached object updated this WON'T GET SAVED saved as this was done AFTER calling session.save()'");		
+		userDetailsPersistent.setUserName("Detached object updated this wont get saved as this was done AFTER calling session.save()");
+		System.out.println("exiting. name field should contain 'Persistent object updated without calling session.save()'");
+		System.out.println("-----------------------------------------------------------------------------\n");
+		
+	}
+	
 	
 
 	public static void demoCrud(){
