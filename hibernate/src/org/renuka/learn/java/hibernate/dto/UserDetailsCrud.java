@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER_DETAILS_CRUD")
+//does the update only if there is somethign to update. Checks by doing select first
+@org.hibernate.annotations.Entity(selectBeforeUpdate=true)
 public class UserDetailsCrud {
 	@Id
 	private int userId;
@@ -33,6 +35,11 @@ public class UserDetailsCrud {
 		super();
 		this.userId = userId;
 		this.userName = userName;
+	}
+	public UserDetailsCrud() {
+		super();
 	}	
+	
+	
 
 }

@@ -66,9 +66,56 @@ public class HibernateTest {
 		demoCrud();		
 		
 		demoTransientPersistentDetached();
+		demoPersistDetachedObjects();
+		
 		
 		writeSummary();
 	}
+	
+	public static void demoPersistDetachedObjects(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoPersistDetachedObjects - this method demos moving detached object to persisting state ");		
+		
+		//first write a record for future reterival		
+		int id = 500;
+		UserDetailsCrud userDetails = new UserDetailsCrud(id, "Persistent User");
+		System.out.println("saving a demo user for further reterival...");
+		System.out.println(userDetails);
+		session.beginTransaction();
+		session.save(userDetails);
+		session.getTransaction().commit();
+		session.close();
+		
+		//reopen session
+		session = sessionFactory.openSession();		
+
+		System.out.println("reteriving the saved user with id = " + id);
+		session.beginTransaction();//
+		UserDetailsCrud userDetailsReterived = session.get(UserDetailsCrud.class, id);
+		session.getTransaction().commit();
+		session.close();		
+		System.out.println("retrived and session closed... ");
+		System.out.println(userDetailsReterived);
+
+		
+		System.out.println("now session is closed and the the object is in detached state. Lets update its values");
+		userDetailsReterived.setUserName("Updated after closing session");
+		System.out.println("it can be attached back again calling sesison.update. we will do that now");		
+		
+		session = sessionFactory.openSession();		
+		session.beginTransaction();//
+		session.update(userDetailsReterived);
+		System.out.println("updating the values now will result in automatic synchronization as the object now is in persistent state");
+		userDetailsReterived.setUserName("Updated without calling save or update");
+		session.getTransaction().commit();
+		session.close();
+		
+	
+		System.out.println("-----------------------------------------------------------------------------\n");
+		
+	}
+	
+	
 	
 	public static void demoTransientPersistentDetached(){
 		Session session = sessionFactory.openSession();
