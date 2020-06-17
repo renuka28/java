@@ -9,8 +9,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.renuka.learn.java.hibernate.dto.Address;
 import org.renuka.learn.java.hibernate.dto.Address2;
-import org.renuka.learn.java.hibernate.dto.FourWheeler;
-import org.renuka.learn.java.hibernate.dto.TwoWheeler;
+import org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable;
+import org.renuka.learn.java.hibernate.dto.FourWheelerSingleTable;
+import org.renuka.learn.java.hibernate.dto.FourWheelerTablePerClass;
+import org.renuka.learn.java.hibernate.dto.TwoWheelerJoinedTable;
+import org.renuka.learn.java.hibernate.dto.TwoWheelerSingleTable;
+import org.renuka.learn.java.hibernate.dto.TwoWheelerTablePerClass;
 import org.renuka.learn.java.hibernate.dto.UserDetails;
 import org.renuka.learn.java.hibernate.dto.UserDetails2;
 import org.renuka.learn.java.hibernate.dto.UserDetails3;
@@ -23,10 +27,12 @@ import org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
 import org.renuka.learn.java.hibernate.dto.Vehicle;
-import org.renuka.learn.java.hibernate.dto.Vehicle2;
 import org.renuka.learn.java.hibernate.dto.VehicleCascadeTypes;
+import org.renuka.learn.java.hibernate.dto.VehicleJoinedTable;
 import org.renuka.learn.java.hibernate.dto.VehicleManyToMany;
 import org.renuka.learn.java.hibernate.dto.VehicleOneToMany;
+import org.renuka.learn.java.hibernate.dto.VehicleSingleTable;
+import org.renuka.learn.java.hibernate.dto.VehicleTablePerClass;
 
 public class HibernateTest {
 
@@ -51,9 +57,63 @@ public class HibernateTest {
 		
 		//inheritance
 		demoSingleTableInheritance();
+		demoTablePerClassInheritance();
+		demoJoinedInheritance();
 				
 		writeSummary();
 		
+	}
+	
+	
+	
+	public static void demoJoinedInheritance(){
+		Session session = sessionFactory.openSession();
+		System.out.println("this method demos joined table inheritance inheritance."
+				+ "\nHibernate will create separate tables for each entity and will store only "
+				+ "\n those attributes which are specifi to the derived class in derive entity's table"
+				+ "\n. during query, hibernate automatically joins");		
+		
+		VehicleJoinedTable bus = new VehicleJoinedTable("Bus");
+		TwoWheelerJoinedTable splendor = new TwoWheelerJoinedTable("Splendor", "Bike Steering Handle");
+		FourWheelerJoinedTable ford = new FourWheelerJoinedTable("Expedition", "Ford steering wheel");	
+		
+		System.out.println("Saving vehicles - The entities will go to separate tables");
+		System.out.println(bus);
+		System.out.println(splendor);
+		System.out.println(ford + "\n");
+		
+		session.beginTransaction();
+		session.save(bus);
+		session.save(splendor);
+		session.save(ford);
+		session.getTransaction().commit();
+		System.out.println("\nVehicles saved successfully....");	
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
+	public static void demoTablePerClassInheritance(){
+		Session session = sessionFactory.openSession();
+		System.out.println("this method demos table per class inheritance inheritance."
+				+ "\nHibernate will create separate tables for each entity");		
+		
+		VehicleTablePerClass bus = new VehicleTablePerClass("Bus");
+		TwoWheelerTablePerClass splendor = new TwoWheelerTablePerClass("Splendor", "Bike Steering Handle");
+		FourWheelerTablePerClass ford = new FourWheelerTablePerClass("Expedition", "Ford steering wheel");	
+		
+		System.out.println("Saving vehicles - The entities will go to separate tables");
+		System.out.println(bus);
+		System.out.println(splendor);
+		System.out.println(ford + "\n");
+		
+		session.beginTransaction();
+		session.save(bus);
+		session.save(splendor);
+		session.save(ford);
+		session.getTransaction().commit();
+		System.out.println("\nVehicles saved successfully....");	
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoSingleTableInheritance(){
@@ -62,11 +122,11 @@ public class HibernateTest {
 				+ "\nHibernate will create a single table with base class names and add additoinal columns to take care of"
 				+ "\nadditional variables in the inherited classes");		
 		
-		Vehicle2 bus = new Vehicle2("Bus");
-		TwoWheeler splendor = new TwoWheeler("Splendor", "Bike Steering Handle");
-		FourWheeler ford = new FourWheeler("Expedition", "Ford steering wheel");	
+		VehicleSingleTable bus = new VehicleSingleTable("Bus");
+		TwoWheelerSingleTable splendor = new TwoWheelerSingleTable("Splendor", "Bike Steering Handle");
+		FourWheelerSingleTable ford = new FourWheelerSingleTable("Expedition", "Ford steering wheel");	
 		
-		System.out.println("Saving vehicles - ");
+		System.out.println("Saving vehicles - The entities will go to a single table ");
 		System.out.println(bus);
 		System.out.println(splendor);
 		System.out.println(ford + "\n");

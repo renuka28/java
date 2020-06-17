@@ -41,13 +41,23 @@
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsCascadeTypes"/>
+        
         <mapping class="org.renuka.learn.java.hibernate.dto.Vehicle"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.Vehicle2"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheeler"/>
-        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheeler"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleOneToMany"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleManyToMany"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleCascadeTypes"/>
+        
+        <mapping class="org.renuka.learn.java.hibernate.dto.VehicleSingleTable"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerSingleTable"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheelerSingleTable"/>
+        
+        <mapping class="org.renuka.learn.java.hibernate.dto.VehicleTablePerClass"/>        
+        <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheelerTablePerClass"/>        
+        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerTablePerClass"/>
+        
+        <mapping class="org.renuka.learn.java.hibernate.dto.VehicleJoinedTable"/>        
+        <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheelerJoinedTable"/>        
+        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable"/>
                 
     </session-factory>
  
