@@ -29,7 +29,8 @@
         <property name="show_sql">true</property>
         <property name="hbm2ddl.auto">create</property>        
                 
-        <!-- our model classes -->
+		<!-- our model classes -->
+		
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails2"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails3"/>
@@ -58,6 +59,8 @@
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleJoinedTable"/>        
         <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheelerJoinedTable"/>        
         <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable"/>
+        
+        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsCrud"/>
                 
     </session-factory>
  

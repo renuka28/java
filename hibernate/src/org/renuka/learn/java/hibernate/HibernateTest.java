@@ -23,6 +23,7 @@ import org.renuka.learn.java.hibernate.dto.UserDetails5;
 import org.renuka.learn.java.hibernate.dto.UserDetails6;
 import org.renuka.learn.java.hibernate.dto.UserDetails7;
 import org.renuka.learn.java.hibernate.dto.UserDetailsCascadeTypes;
+import org.renuka.learn.java.hibernate.dto.UserDetailsCrud;
 import org.renuka.learn.java.hibernate.dto.UserDetailsManyToMany;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToManyToOneMapping;
 import org.renuka.learn.java.hibernate.dto.UserDetailsOneToOneMapping;
@@ -59,9 +60,74 @@ public class HibernateTest {
 		demoSingleTableInheritance();
 		demoTablePerClassInheritance();
 		demoJoinedInheritance();
+		
+		//CRUD
+		demoCrud();
 				
 		writeSummary();
 		
+	}
+	
+	public static void demoCrud(){
+		Session session = sessionFactory.openSession();
+		System.out.println("this method demos basic CRUD operations");		
+	
+		session.beginTransaction();
+		int startId = 0, endId = 10, totalRecords = (endId- startId);
+		
+		//CRUD- create
+		System.out.println("\nCRUD Create - Saving " + totalRecords + " records UserDetailsCrud table ... ");
+		for (int i = startId; i < endId; i++) {
+			UserDetailsCrud userDetailsCrud = new UserDetailsCrud(i, "User Details for Crud - " + i);	
+			System.out.println(userDetailsCrud);
+			session.save(userDetailsCrud);
+		}
+		session.getTransaction().commit();
+		System.out.println("\n"  + totalRecords + " records saved to UserDetailsCrud table successfully....\n");	
+		
+		//CRUD - reterive
+		System.out.println("\nCRUD Reterive - Reteriving "  + totalRecords + " records from UserDetailsCrud table ... ");
+		ArrayList<UserDetailsCrud> userList = new ArrayList<UserDetailsCrud>(totalRecords);
+		for (int i = startId; i < endId; i++) {
+			UserDetailsCrud userDetailsCrud = session.get(UserDetailsCrud.class,  i);
+			userList.add(userDetailsCrud);
+			System.out.println(userDetailsCrud);
+			session.save(userDetailsCrud);
+		}
+		System.out.println("\n"  + totalRecords + " records reterived from UserDetailsCrud table successfully....");
+		
+		//CRUD - update
+		int updateUpto = endId/2;
+		
+		System.out.println("\nCRUD update - updating UserDetailsCrud with userid ranging from " 
+								+ startId + " up to " + updateUpto  +" by adding strin 'Updated by Hibernate'... ");
+		session.beginTransaction();
+		for (int i = startId; i < updateUpto; i++) {
+			UserDetailsCrud userDetailsCrud = userList.get(i);
+			userDetailsCrud.setUserName(userDetailsCrud.getUserName() + " Updated by Hibernate");
+			System.out.println("updating - " +userDetailsCrud);
+			session.update(userDetailsCrud);
+		}
+		session.getTransaction().commit();
+
+		System.out.println("\nUserDetailsCrud updated for userids ranging from " 
+				+ startId + " to " + updateUpto + "...   and saved to UserDetailsCrud table successfully....");		
+		
+		//CRUD - delete
+		System.out.println("\nCRUD delete - deleting UserDetailsCrud with userid ranging from " 
+								+ updateUpto + " to " + endId  +"... ");
+		session.beginTransaction();
+		for (int i = updateUpto; i < endId; i++) {
+			UserDetailsCrud userDetailsCrud = userList.get(i);
+			System.out.println("deleting - " +userDetailsCrud);
+			session.delete(userDetailsCrud);
+		}
+		session.getTransaction().commit();
+		System.out.println("\nUserDetailsCrud with userid ranging from " 
+				+ updateUpto + " to " + endId + "...  deleted from UserDetailsCrud table successfully....");		
+		
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	
