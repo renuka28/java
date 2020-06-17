@@ -41,6 +41,7 @@ public class HibernateTest {
 	private static int currentUserId = 1;
 	public static void main(String[] args) {		
 		 
+		//basic setup
 		setupSessionFactoryDB();
 		
 		demoInsert();
@@ -62,15 +63,15 @@ public class HibernateTest {
 		demoJoinedInheritance();
 		
 		//CRUD
-		demoCrud();
-				
-		writeSummary();
+		demoCrud();		
 		
+		writeSummary();
 	}
 	
+
 	public static void demoCrud(){
 		Session session = sessionFactory.openSession();
-		System.out.println("this method demos basic CRUD operations");		
+		System.out.println("demoCrud -this method demos basic CRUD operations");		
 	
 		session.beginTransaction();
 		int startId = 0, endId = 10, totalRecords = (endId- startId);
@@ -134,7 +135,7 @@ public class HibernateTest {
 	
 	public static void demoJoinedInheritance(){
 		Session session = sessionFactory.openSession();
-		System.out.println("this method demos joined table inheritance inheritance."
+		System.out.println("demoJoinedInheritance - this method demos joined table inheritance inheritance."
 				+ "\nHibernate will create separate tables for each entity and will store only "
 				+ "\n those attributes which are specifi to the derived class in derive entity's table"
 				+ "\n. during query, hibernate automatically joins");		
@@ -160,7 +161,7 @@ public class HibernateTest {
 	
 	public static void demoTablePerClassInheritance(){
 		Session session = sessionFactory.openSession();
-		System.out.println("this method demos table per class inheritance inheritance."
+		System.out.println("demoTablePerClassInheritance -this method demos table per class inheritance inheritance."
 				+ "\nHibernate will create separate tables for each entity");		
 		
 		VehicleTablePerClass bus = new VehicleTablePerClass("Bus");
@@ -184,7 +185,7 @@ public class HibernateTest {
 	
 	public static void demoSingleTableInheritance(){
 		Session session = sessionFactory.openSession();
-		System.out.println("this method demos basic single table inheritance inheritance."
+		System.out.println("demoTablePerClassInheritance - this method demos basic single table inheritance inheritance."
 				+ "\nHibernate will create a single table with base class names and add additoinal columns to take care of"
 				+ "\nadditional variables in the inherited classes");		
 		
@@ -210,7 +211,7 @@ public class HibernateTest {
 	public static void demoCascadeType(){
 		Session session = sessionFactory.openSession();
 		
-		System.out.println("this method demos CascadingTypes");				
+		System.out.println("demoCascadeType - this method demos CascadingTypes");				
 		UserDetailsCascadeTypes userCascadingStyles = new UserDetailsCascadeTypes("UserDetailsManyToMany User 1");
 		VehicleCascadeTypes tahoe = new VehicleCascadeTypes("Tahoe");		
 		VehicleCascadeTypes ford = new VehicleCascadeTypes("Expedition");	
@@ -242,7 +243,7 @@ public class HibernateTest {
 	public static void demoOneToManyToManyMapping(){
 		Session session = sessionFactory.openSession();
 		
-		System.out.println("this method demos many to many entity mapping");				
+		System.out.println("demoOneToManyToManyMapping - this method demos many to many entity mapping");				
 		
 		
 		UserDetailsManyToMany usermanyToMany1 = new UserDetailsManyToMany("UserDetailsManyToMany User 1");
@@ -296,7 +297,7 @@ public class HibernateTest {
 	public static void demoOneToManyToOneMapping(){
 		Session session = sessionFactory.openSession();
 		
-		System.out.println("this method demos one to many and many to one entity mapping");				
+		System.out.println("demoOneToManyToOneMapping - this method demos one to many and many to one entity mapping");				
 		
 		
 		UserDetailsOneToManyToOneMapping userOneToMany = new UserDetailsOneToManyToOneMapping();
@@ -333,7 +334,7 @@ public class HibernateTest {
 	public static void demoOneToOneMapping(){
 		Session session = sessionFactory.openSession();
 		
-		System.out.println("this method demos one to one entity mapping");				
+		System.out.println("demoOneToOneMapping - this method demos one to one entity mapping");				
 		Vehicle vehicle = new Vehicle();
 		vehicle.setVehicleName("Ford expedition");
 		UserDetailsOneToOneMapping userOneToOne = new UserDetailsOneToOneMapping(
@@ -358,7 +359,8 @@ public class HibernateTest {
 	public static void demoLazyInitializationWithUserList7() {
 		
 		Session session = sessionFactory.openSession();
-		System.out.println("fetching user details to user_details7 which has member variable listOfAddresses"
+		System.out.println("demoLazyInitializationWithUserList7 - fetching user details to user_details7 which has member "
+				+ "variable listOfAddresses"
 				+ " as member variable. This will result in lazy initializaiton with the program getting a "
 				+ "proxy object.");
 		UserDetails7 user7 = new UserDetails7();
@@ -396,7 +398,7 @@ public class HibernateTest {
 	public static void demoListWithUserList6() {
 		
 		
-		System.out.println("inserting user details to user_details6 which stores Address2 using HashSet");		
+		System.out.println("demoListWithUserList6 - inserting user details to user_details6 which stores Address2 using HashSet");		
 			UserDetails6 user6 = new UserDetails6();
 		user6.setUserName("User6 with variable number of addresses" + "\n");		
 		Collection<Address2> listofAddress = GetDummyAddresses();
@@ -416,7 +418,7 @@ public class HibernateTest {
 	public static void demoList() {
 		
 		
-		System.out.println("inserting user details to user_details5 which stores Address2 using HashSet");		
+		System.out.println("demoList - inserting user details to user_details5 which stores Address2 using HashSet");		
 		UserDetails5 user5 = new UserDetails5();
 		Collection<Address2> listofAddress = GetDummyAddresses();
 		user5.getListofAddress().addAll(listofAddress);
@@ -436,7 +438,7 @@ public class HibernateTest {
 	public static void demoEmbeddedValueType2() {
 		
 		
-		System.out.println("inserting user details to user_details4 with embedded value types");		
+		System.out.println("demoEmbeddedValueType2 - inserting user details to user_details4 with embedded value types");		
 		ArrayList<Address2> listofAddress = GetDummyAddresses();		
 		UserDetails4 user4 = new UserDetails4("user4 name", listofAddress.get(0), listofAddress.get(1) );
 		
@@ -453,7 +455,7 @@ public class HibernateTest {
 	public static void demoEmbeddedValueType() {
 		
 		
-		System.out.println("inserting user details to user_details3 with embedded value types");		
+		System.out.println("demoEmbeddedValueType - inserting user details to user_details3 with embedded value types");		
 		Address userAddress = new Address("dummy stree", "tx", "la", "85151");		
 		UserDetails3 user3 = new UserDetails3("user name", userAddress);
 		System.out.println(user3.toString() + "\n");
@@ -470,7 +472,7 @@ public class HibernateTest {
 	public static void demoPrimaryId() {
 		
 		
-		System.out.println("inserting user details to user_details2 with auto id generation");
+		System.out.println("demoPrimaryId - inserting user details to user_details2 with auto id generation");
 		UserDetails2 user2 = new UserDetails2("First user", new Date(),"First user address", "first user description" );
 		Session session = sessionFactory.openSession();
 		//save to db
@@ -489,7 +491,7 @@ public class HibernateTest {
 		//read from db
 		session.beginTransaction();
 		
-		System.out.println("reteriving user details for user id " + currentUserId);		
+		System.out.println("demoReterive - reteriving user details for user id " + currentUserId);		
 		UserDetails user = (UserDetails)session.get(UserDetails.class, currentUserId);		
 		System.out.println(user.toString());
 		
@@ -502,7 +504,7 @@ public class HibernateTest {
 	public static void demoInsert() {
 		
 		
-		System.out.println("inserting user details for user id " + currentUserId);
+		System.out.println("demoInsert - inserting user details for user id " + currentUserId);
 		UserDetails user = new UserDetails(currentUserId, "First user", new Date(),"First user address", "first user description" );
 		Session session = sessionFactory.openSession();
 		//save to db
