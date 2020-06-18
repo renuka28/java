@@ -3,10 +3,13 @@ package org.renuka.learn.java.hibernate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.exception.ConstraintViolationException;
 import org.renuka.learn.java.hibernate.dto.Address;
 import org.renuka.learn.java.hibernate.dto.Address2;
 import org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable;
@@ -63,13 +66,40 @@ public class HibernateTest {
 		demoJoinedInheritance();
 		
 		//CRUD
-		demoCrud();		
+		demoCrud();
 		
 		demoTransientPersistentDetached();
 		demoPersistDetachedObjects();
 		
+		//HQL
+		demoHQL();
 		
 		writeSummary();
+	}
+	
+	public static void demoHQL(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoHQL - this method demos using HQL and Query Object ");	
+		
+		int startId = 1212, totalRecords = 10;
+		addUserToUserDetailsCrud(session, startId,  totalRecords);
+		
+		session.beginTransaction();
+		//get query object
+		//using org.hibernate and not that of jpa
+		Query query = session.createQuery("from UserDetailsCrud where userId > 5");		
+		List users = query.getResultList();
+		System.out.println("size of result = " + users.size());
+		System.out.println("users reterived are ...");
+		for(int i =0; i < users.size(); i++) {
+			
+			System.out.println(((UserDetailsCrud)users.get(i)).toString());
+		}		
+		
+		session.getTransaction().commit();
+		
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoPersistDetachedObjects(){
@@ -153,18 +183,8 @@ public class HibernateTest {
 		Session session = sessionFactory.openSession();
 		System.out.println("demoCrud -this method demos basic CRUD operations");		
 	
-		session.beginTransaction();
 		int startId = 0, endId = 10, totalRecords = (endId- startId);
-		
-		//CRUD- create
-		System.out.println("\nCRUD Create - Saving " + totalRecords + " records UserDetailsCrud table ... ");
-		for (int i = startId; i < endId; i++) {
-			UserDetailsCrud userDetailsCrud = new UserDetailsCrud(i, "User Details for Crud - " + i);	
-			System.out.println(userDetailsCrud);
-			session.save(userDetailsCrud);
-		}
-		session.getTransaction().commit();
-		System.out.println("\n"  + totalRecords + " records saved to UserDetailsCrud table successfully....\n");	
+		addUserToUserDetailsCrud(session, startId,  totalRecords);
 		
 		//CRUD - reterive
 		System.out.println("\nCRUD Reterive - Reteriving "  + totalRecords + " records from UserDetailsCrud table ... ");
@@ -209,6 +229,23 @@ public class HibernateTest {
 		
 		session.close();
 		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
+	//CRUD add user. Carved to act as an helper function to add required number of records to  
+	
+	public static void addUserToUserDetailsCrud(Session session, int startId, int countOfRecords ){
+		
+		//CRUD- create
+		session.beginTransaction();
+		System.out.println("\nCRUD Create - Saving " + countOfRecords + " records UserDetailsCrud table ... ");
+		for (int i = startId; i < startId+countOfRecords; i++) {	
+			UserDetailsCrud userDetailsCrud = new UserDetailsCrud(i, "User Details for Crud - " + i);	
+			System.out.println(userDetailsCrud);				
+			session.save(userDetailsCrud);
+		
+		}
+		session.getTransaction().commit();
+		System.out.println("\n"  + countOfRecords + " records saved to UserDetailsCrud table successfully....\n");
 	}
 	
 	
