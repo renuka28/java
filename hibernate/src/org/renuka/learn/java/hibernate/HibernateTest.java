@@ -42,6 +42,7 @@ public class HibernateTest {
 
 	private static SessionFactory sessionFactory = null;
 	private static int currentUserId = 1;
+	private static int recordPerPage = 5;
 	public static void main(String[] args) {		
 		 
 		//basic setup
@@ -74,20 +75,88 @@ public class HibernateTest {
 		//HQL
 		demoHQL();
 		demoSelectAndPagination();
+		demoParameterBindingAndSQLInjection();
 		
 		writeSummary();
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void demoParameterBindingAndSQLInjection(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoParameterBindingAndSQLInjection - this method demos parameter binding and SQL Injection using HQL and Query Object ");	
+		
+		int maxId = -1, totalRecords = 9,  pageStart = 0;
+		
+		maxId = getMaxId(session);
+		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);	
+		
+		//start from next availabe ID
+		maxId++;
+		addUserToUserDetailsCrud(session, maxId,  totalRecords);
+		
+		session.beginTransaction();
+		
+		//example of sql injection . The  user is expected to enter a user id like '5' for which we will query the details
+		//instead of that they go ahead and enter an expression. If our program is capaturing the values in a string, as most
+		//programs do, then disaster waiting to happen. 
+		//intended input
+		//String startId = "5";
+		
+		System.out.println("example of sql injection . The  user is expected to enter a user id like '5' for which we will query the details\r\n" + 
+				"instead of that they go ahead and enter an expression. If our program is capaturing the values in a string, as most\r\n" + 
+				"programs do, then disaster waiting to happen. \r\n" + 
+				"//intended input\r\n" + 
+				"String startId = \"5\" \r\n" +
+				"//actual input by user\r\n" +
+				"String startId = \"5 or 1=1\" \n");
+		//what is actually entered
+		String startId = "5 or 1=1";
+		
+		
+		String sql = "from UserDetailsCrud where userId=" + startId;
+		System.out.println("executing query - " + sql);
+		Query queryUserWithUserInput= session.createQuery(sql);
+		pageIt(queryUserWithUserInput, pageStart, recordPerPage);
+		
+		//parametered input using positional parameters
+		System.out.println("\nBetter way to do it is using Parameterized queries ");
+		sql = "from UserDetailsCrud where userId > ?0";
+		startId = "1000";
+		queryUserWithUserInput= session.createQuery(sql);
+		queryUserWithUserInput = queryUserWithUserInput.setInteger(0, Integer.parseInt(startId));
+		System.out.println("executing parameterized query - " + queryUserWithUserInput.getQueryString());
+		pageIt(queryUserWithUserInput, pageStart, recordPerPage);
+		
+		
+		//parametered input using named parameters
+		System.out.println("\nParameterzed queires using parametrized positional named arugments ");
+		sql = "from UserDetailsCrud where userId = :userID";		
+		queryUserWithUserInput= session.createQuery(sql);
+		maxId = getMaxId(session);
+		System.out.println("MAX ID = " + maxId);
+		queryUserWithUserInput = queryUserWithUserInput.setInteger("userID", maxId);
+		System.out.println("executing parameterized query - " + queryUserWithUserInput.getQueryString());
+		pageIt(queryUserWithUserInput, pageStart, recordPerPage);
+		
+		
+		session.getTransaction().commit();
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoSelectAndPagination(){
 		Session session = sessionFactory.openSession();
 		System.out.println("demoSelectAndPagination - this method demos Select and Pagination using HQL and Query Object ");	
 		
-		int startId = 2000;
-		int totalRecords = 100;
-		int pageSize = 20;
-		int pageStart = 0;
+		int maxId = -1, totalRecords = 10,  pageStart = 0;
 		
-		addUserToUserDetailsCrud(session, startId,  totalRecords);
+		maxId = getMaxId(session);
+		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);	
+		
+		//start from next availabe ID
+		maxId++;
+		addUserToUserDetailsCrud(session, maxId,  totalRecords);
+		maxId = getMaxId(session);
 		
 		session.beginTransaction();
 		
@@ -99,11 +168,7 @@ public class HibernateTest {
 		totalRecords = (int)((long) queryGetCount.getResultList().get(0));
 		System.out.println("Total records in UserDetailsCrud = " + totalRecords);
 		
-		sql = "select max(userId) from UserDetailsCrud";
-		System.out.println("executing query - " + sql);
-		Query queryGetMax = session.createQuery(sql);
-		int maxId = (int) queryGetMax.getResultList().get(0);
-		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);		
+			
 		
 		sql = "select userName from UserDetailsCrud where userId=" + maxId;
 		System.out.println("executing query - " + sql);
@@ -116,7 +181,7 @@ public class HibernateTest {
 		//standard HQL and pagination 
 		Query query = session.createQuery("from UserDetailsCrud");
 		//setting cursor. this can be used to pagination as shown below
-		pageIt(query, pageStart, pageSize, totalRecords);
+		pageIt(query, pageStart, recordPerPage);
 		
 		session.getTransaction().commit();
 		
@@ -124,17 +189,32 @@ public class HibernateTest {
 		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
-	public static void pageIt(Query query, int start, int pageSize, int totalRecords) {
-		int pageCount =totalRecords/pageSize;
+	public static int getMaxId(Session session) {
+		String sql = "select max(userId) from UserDetailsCrud";
+		System.out.println("executing query - " + sql);
+		int maxId = -1;
+		Query queryGetMax = session.createQuery(sql);
+		if(queryGetMax.getResultList().get(0) != null) {
+			maxId = (int) queryGetMax.getResultList().get(0);
+		}
+		return maxId;
+	}
+	
+	public static void pageIt(Query query, int start, int recordPerPage) {
+		
+		int totalRecords = query.getResultList().size();
+		int pageCount = (int) Math.ceil(totalRecords/(double)recordPerPage);
 				
+		System.out.println("Total records in the query - " + totalRecords + " and will have " + pageCount + " pages");
 		for (int startPage = start; startPage < pageCount ; startPage++) {
-			int from = startPage*pageSize;
+			int from = startPage*recordPerPage;
 			query.setFirstResult(from);
-			query.setMaxResults(pageSize);
+			query.setMaxResults(recordPerPage);
 			
 			List<UserDetailsCrud> users = (List<UserDetailsCrud>)query.getResultList();
-			System.out.println("users start = " + from + ", to = " + (from + pageSize - 1) );
-			for(int i =0; i < users.size(); i++) {
+			int recordsInPage = users.size();
+			System.out.println("page starts = " + from + ", to = " + (from + recordsInPage) + " and has " + recordsInPage+ " records" );
+			for(int i =0; i < recordsInPage ; i++) {
 				
 				System.out.println((users.get(i)).toString());
 			}	

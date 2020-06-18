@@ -58,7 +58,7 @@
         
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleJoinedTable"/>        
         <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheelerJoinedTable"/>        
-        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable"/>
+        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable"/>  
         
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsCrud"/>
                 
