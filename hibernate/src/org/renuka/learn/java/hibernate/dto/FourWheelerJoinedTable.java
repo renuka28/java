@@ -1,6 +1,5 @@
 package org.renuka.learn.java.hibernate.dto;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity

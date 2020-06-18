@@ -1,11 +1,10 @@
 package org.renuka.learn.java.hibernate.dto;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@SuppressWarnings("deprecation")
 @Entity
 @Table(name = "USER_DETAILS_CRUD")
 //does the update only if there is somethign to update. Checks by doing select first

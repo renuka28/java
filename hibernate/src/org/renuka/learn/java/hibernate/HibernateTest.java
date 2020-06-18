@@ -9,7 +9,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.exception.ConstraintViolationException;
 import org.renuka.learn.java.hibernate.dto.Address;
 import org.renuka.learn.java.hibernate.dto.Address2;
 import org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable;
@@ -80,7 +79,7 @@ public class HibernateTest {
 		writeSummary();
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public static void demoParameterBindingAndSQLInjection(){
 		Session session = sessionFactory.openSession();
 		System.out.println("demoParameterBindingAndSQLInjection - this method demos parameter binding and SQL Injection using HQL and Query Object ");	
@@ -144,6 +143,7 @@ public class HibernateTest {
 		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public static void demoSelectAndPagination(){
 		Session session = sessionFactory.openSession();
 		System.out.println("demoSelectAndPagination - this method demos Select and Pagination using HQL and Query Object ");	
@@ -171,7 +171,7 @@ public class HibernateTest {
 			
 		
 		sql = "select userName from UserDetailsCrud where userId=" + maxId;
-		System.out.println("executing query - " + sql);
+		System.out.println("executing query - " + sql);		
 		Query queryUserWithMaxId = session.createQuery(sql);
 		String userWithMaxId = (String)queryUserWithMaxId.getResultList().get(0);
 		System.out.println("User name with Max id '" + maxId + "' is '"  + userWithMaxId);	
@@ -179,6 +179,7 @@ public class HibernateTest {
 		//get query object
 		//using org.hibernate and not that of jpa
 		//standard HQL and pagination 
+		
 		Query query = session.createQuery("from UserDetailsCrud");
 		//setting cursor. this can be used to pagination as shown below
 		pageIt(query, pageStart, recordPerPage);
@@ -189,6 +190,7 @@ public class HibernateTest {
 		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public static int getMaxId(Session session) {
 		String sql = "select max(userId) from UserDetailsCrud";
 		System.out.println("executing query - " + sql);
@@ -200,6 +202,7 @@ public class HibernateTest {
 		return maxId;
 	}
 	
+	@SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
 	public static void pageIt(Query query, int start, int recordPerPage) {
 		
 		int totalRecords = query.getResultList().size();
@@ -222,6 +225,7 @@ public class HibernateTest {
 		}
 	}
 	
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	public static void demoHQL(){
 		Session session = sessionFactory.openSession();
 		System.out.println("demoHQL - this method demos using HQL and Query Object ");	
