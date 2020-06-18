@@ -2,6 +2,8 @@ package org.renuka.learn.java.hibernate.dto;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @SuppressWarnings("deprecation")
@@ -9,6 +11,11 @@ import javax.persistence.Table;
 @Table(name = "USER_DETAILS_CRUD")
 //does the update only if there is somethign to update. Checks by doing select first
 @org.hibernate.annotations.Entity(selectBeforeUpdate=true)
+@NamedQuery(name="UserDetailsCrud.userById", query="from UserDetailsCrud where userId = :userID")
+@NamedQuery(name="UserDetailsCrud.allUsersWithHigerId", query="from UserDetailsCrud where userId > :userID")
+@NamedQuery(name="UserDetailsCrud.maxUserId", query="select max(userId) from UserDetailsCrud")
+//use standard sql query as you would use in database prompt. refer to table names and column names
+@NamedNativeQuery(name="UserDetailsCrud.byName", query = "select * from USER_DETAILS_CRUD where username = :userName", resultClass = UserDetailsCrud.class)
 public class UserDetailsCrud {
 	@Id
 	private int userId;

@@ -31,7 +31,7 @@
                 
 		<!-- our model classes -->
 		
-        <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails"/>
+         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails2"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails3"/>
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetails4"/>
@@ -58,7 +58,7 @@
         
         <mapping class="org.renuka.learn.java.hibernate.dto.VehicleJoinedTable"/>        
         <mapping class="org.renuka.learn.java.hibernate.dto.TwoWheelerJoinedTable"/>        
-        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable"/>  
+        <mapping class="org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable"/>   
         
         <mapping class="org.renuka.learn.java.hibernate.dto.UserDetailsCrud"/>
                 

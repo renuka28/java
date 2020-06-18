@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQuery;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -42,6 +45,8 @@ public class HibernateTest {
 	private static SessionFactory sessionFactory = null;
 	private static int currentUserId = 1;
 	private static int recordPerPage = 5;
+	
+	
 	public static void main(String[] args) {		
 		 
 		//basic setup
@@ -75,8 +80,56 @@ public class HibernateTest {
 		demoHQL();
 		demoSelectAndPagination();
 		demoParameterBindingAndSQLInjection();
+		demoNamedQueries();
 		
 		writeSummary();
+	}
+	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	public static void demoNamedQueries(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoNamedQueries - this method demos using Named queries ");	
+		System.out.println("calling getMaxId() which uses named queires");
+		int maxId = -1, totalRecords = 9,  pageStart = 0;		
+		maxId = getMaxId(session);
+		//start from next one
+		maxId++;
+		addUserToUserDetailsCrud(session, maxId,  totalRecords);
+		maxId = getMaxId(session);
+		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);	
+
+		
+		String namedQuery = "UserDetailsCrud.allUsersWithHigerId";
+		Query allUsersWithHigerId= session.getNamedQuery(namedQuery);
+		allUsersWithHigerId = allUsersWithHigerId.setInteger("userID", maxId/2);
+		System.out.println("\nexecuting parameterized named query - " + namedQuery + " -- " + allUsersWithHigerId.getQueryString());
+		pageIt(allUsersWithHigerId, pageStart, recordPerPage);
+		
+		
+		System.out.println("\nfetching UserDetailsCrud with max id " + maxId + 
+				" using @NamedQuery(name=\"UserDetailsCrud.userById\", query=\"from UserDetailsCrud where userId = :userID\")");	
+		namedQuery = "UserDetailsCrud.userById";
+		Query userWithMaxId  = session.getNamedQuery(namedQuery);
+		namedQuery = "UserDetailsCrud.userById";
+		userWithMaxId  = userWithMaxId.setInteger("userID", maxId);
+		System.out.println("executing parameterized query - " + userWithMaxId.getQueryString());
+		List<UserDetailsCrud> users = (List<UserDetailsCrud>)userWithMaxId.getResultList();
+		System.out.println("user with max id '" + maxId +"' = " + users.get(0).toString());
+		
+		
+		System.out.println("\nfetching user by name using named query - "
+				+ "@NamedNativeQuery(name=\"UserDetailsCrud.byName\", query = \"select * from USER_DETAILS_CRUD where username = :userName\", resultClass = UserDetailsCrud.class)");
+		String namedNativeQuery = "UserDetailsCrud.byName";
+		Query byNme = session.getNamedQuery(namedNativeQuery);
+		String userName = ((UserDetailsCrud)users.get(0)).getUserName();
+		byNme = byNme.setString("userName", userName);
+		System.out.println("executing parameterized named query - " + namedQuery + " -- " + byNme.getQueryString());
+		users = (List<UserDetailsCrud>)byNme.getResultList();
+		System.out.println("user with username '" + userName +"' = " + users.get(0).toString());
+		
+		
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
@@ -192,10 +245,11 @@ public class HibernateTest {
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public static int getMaxId(Session session) {
-		String sql = "select max(userId) from UserDetailsCrud";
-		System.out.println("executing query - " + sql);
+		//String sql = "select max(userId) from UserDetailsCrud";
+
 		int maxId = -1;
-		Query queryGetMax = session.createQuery(sql);
+		Query queryGetMax = session.getNamedQuery("UserDetailsCrud.maxUserId");
+		System.out.println("executing query - " + queryGetMax.getQueryString());
 		if(queryGetMax.getResultList().get(0) != null) {
 			maxId = (int) queryGetMax.getResultList().get(0);
 		}
