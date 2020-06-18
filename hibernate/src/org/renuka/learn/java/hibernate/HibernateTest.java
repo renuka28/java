@@ -73,15 +73,80 @@ public class HibernateTest {
 		
 		//HQL
 		demoHQL();
+		demoSelectAndPagination();
 		
 		writeSummary();
+	}
+	
+	public static void demoSelectAndPagination(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoSelectAndPagination - this method demos Select and Pagination using HQL and Query Object ");	
+		
+		int startId = 2000;
+		int totalRecords = 100;
+		int pageSize = 20;
+		int pageStart = 0;
+		
+		addUserToUserDetailsCrud(session, startId,  totalRecords);
+		
+		session.beginTransaction();
+		
+		//custom queries and limiting the number of columns
+		// we use member variables name instead of column name
+		String sql = "select count(*) from UserDetailsCrud";
+		System.out.println("executing query - " + sql);
+		Query queryGetCount = session.createQuery(sql);
+		totalRecords = (int)((long) queryGetCount.getResultList().get(0));
+		System.out.println("Total records in UserDetailsCrud = " + totalRecords);
+		
+		sql = "select max(userId) from UserDetailsCrud";
+		System.out.println("executing query - " + sql);
+		Query queryGetMax = session.createQuery(sql);
+		int maxId = (int) queryGetMax.getResultList().get(0);
+		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);		
+		
+		sql = "select userName from UserDetailsCrud where userId=" + maxId;
+		System.out.println("executing query - " + sql);
+		Query queryUserWithMaxId = session.createQuery(sql);
+		String userWithMaxId = (String)queryUserWithMaxId.getResultList().get(0);
+		System.out.println("User name with Max id '" + maxId + "' is '"  + userWithMaxId);	
+							
+		//get query object
+		//using org.hibernate and not that of jpa
+		//standard HQL and pagination 
+		Query query = session.createQuery("from UserDetailsCrud");
+		//setting cursor. this can be used to pagination as shown below
+		pageIt(query, pageStart, pageSize, totalRecords);
+		
+		session.getTransaction().commit();
+		
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
+	public static void pageIt(Query query, int start, int pageSize, int totalRecords) {
+		int pageCount =totalRecords/pageSize;
+				
+		for (int startPage = start; startPage < pageCount ; startPage++) {
+			int from = startPage*pageSize;
+			query.setFirstResult(from);
+			query.setMaxResults(pageSize);
+			
+			List<UserDetailsCrud> users = (List<UserDetailsCrud>)query.getResultList();
+			System.out.println("users start = " + from + ", to = " + (from + pageSize - 1) );
+			for(int i =0; i < users.size(); i++) {
+				
+				System.out.println((users.get(i)).toString());
+			}	
+			
+		}
 	}
 	
 	public static void demoHQL(){
 		Session session = sessionFactory.openSession();
 		System.out.println("demoHQL - this method demos using HQL and Query Object ");	
 		
-		int startId = 1212, totalRecords = 10;
+		int startId = 1000, totalRecords = 10;
 		addUserToUserDetailsCrud(session, startId,  totalRecords);
 		
 		session.beginTransaction();
