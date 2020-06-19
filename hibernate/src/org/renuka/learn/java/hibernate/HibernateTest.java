@@ -57,6 +57,7 @@ public class HibernateTest {
 		//basic setup
 		setupSessionFactoryDB();
 		
+		//basic operation
 		demoInsert();
 		demoReterive();
 		demoPrimaryId();
@@ -65,6 +66,8 @@ public class HibernateTest {
 		demoList();
 		demoListWithUserList6();
 		demoLazyInitializationWithUserList7();
+		
+		//relationship mapping
 		demoOneToOneMapping();
 		demoOneToManyToOneMapping();
 		demoOneToManyToManyMapping();
@@ -89,13 +92,58 @@ public class HibernateTest {
 		
 		//Criteria API
 		demoCriteriaAPI();
-		demoProjections();
-		demoQueryByExample();
+		demoCriteriaProjections();
+		demoCriteriaQueryByExample();
+		
+		//Hibernate Cache
+		demoHibernateDefaultCache();
 		
 		writeSummary();
 	}
 	
-	public static void demoQueryByExample(){
+	public static void demoHibernateDefaultCache() {
+		
+		Session session = sessionFactory.openSession();
+		System.out.println("\ndemoHibernateDefaultCache - this method demos caching in Criteria ");	
+		
+		int maxId = -1, totalRecords = 25,  pageStart = 0;		
+		
+		//add some records for playing around
+		addSomeRecords(session, totalRecords);
+
+		
+		System.out.println("\ndemo caching in hibernate - enable hibernate query printing using <property name=\"show_sql\">true</property> in hibernate.cfg.xml ");
+		System.out.println("below session.get results in a select statement");
+		session.beginTransaction();
+		//we have added 25 records. so there will be a record with id 10
+		UserDetailsCrud user1 = (UserDetailsCrud) session.get(UserDetailsCrud.class, 10);
+		System.out.println(user1.toString());
+		
+		System.out.println("if we repeat the same call again it won't result in another sleect statement");		
+		UserDetailsCrud user2 = (UserDetailsCrud) session.get(UserDetailsCrud.class, 10);
+		System.out.println(user2.toString());
+		
+		System.out.println("even if we update the user it will only update the DB and won't do a select again");
+		user1.setUserName(user1.getUserName() + " - Updated");
+		user2 = (UserDetailsCrud) session.get(UserDetailsCrud.class, 10);
+		System.out.println(user2.toString());
+		
+		session.getTransaction().commit();
+		session.close();
+		
+		
+		Session session2 = sessionFactory.openSession();
+		session2.beginTransaction();
+		System.out.println("\ndoing the same thing again in a new session will force the Hibernate to fetch the data again");		
+		user2 = (UserDetailsCrud) session2.get(UserDetailsCrud.class, 10);
+		System.out.println(user2.toString());
+		System.out.println("we can use second level cache to avoid repeated select statement above");
+		session2.close();
+		
+		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
+	public static void demoCriteriaQueryByExample(){
 		Session session = sessionFactory.openSession();
 		System.out.println("\ndemoProjectionsAndQueryByExample - this method demos Query by Example using depricated Criteria API ");	
 		
@@ -177,7 +225,7 @@ public class HibernateTest {
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
-	public static void demoProjections(){
+	public static void demoCriteriaProjections(){
 		Session session = sessionFactory.openSession();
 		System.out.println("demoProjectionsAndQueryByExample - this method demos Projections using depricated Criteria API ");	
 		
