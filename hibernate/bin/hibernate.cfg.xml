@@ -13,8 +13,9 @@
     <session-factory>    
     
 
-    
-    	<!-- postgres configurations- setup hibernatedb again if you are using docker -->      
+    	<!--To switch between the databases, just replace the next few lines with corresponding lines from *_mysql.xml/*_pg.xml  -->
+           <!-- mysql configurations- setup hibernatedb again if you are using docker -->        
+           
     	<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:15432/hibernatedb</property>
         <property name="hibernate.connection.username">postgres</property>

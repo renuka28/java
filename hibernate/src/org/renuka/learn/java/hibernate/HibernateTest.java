@@ -14,6 +14,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.renuka.learn.java.hibernate.dto.Address;
 import org.renuka.learn.java.hibernate.dto.Address2;
@@ -86,8 +89,140 @@ public class HibernateTest {
 		
 		//Criteria API
 		demoCriteriaAPI();
+		demoProjections();
+		demoQueryByExample();
 		
 		writeSummary();
+	}
+	
+	public static void demoQueryByExample(){
+		Session session = sessionFactory.openSession();
+		System.out.println("\ndemoProjectionsAndQueryByExample - this method demos Query by Example using depricated Criteria API ");	
+		
+		int maxId = -1, totalRecords = 25,  pageStart = 0;		
+		
+		//add some records for playing around
+		addSomeRecords(session, totalRecords);
+		maxId = getMaxId(session);
+		UserDetailsCrud userNameWIthMaxId = getUserWithMaxId(session);
+		
+		//create an example		
+		Example example = Example.create(userNameWIthMaxId);
+		System.out.println("\nquery for users using example object " + userNameWIthMaxId);
+		System.out.println("since all values are set for the example object it will pull objects which are exactly same as example object");
+		Criteria criteria = session.createCriteria(UserDetailsCrud.class)
+				.add(example);		
+		List<Object> users = criteria.list();
+		System.out.println("users pulled using example object...");
+		for(Object user:users)
+			System.out.println(user);
+		
+		//query with no value set to primary key
+		UserDetailsCrud exampleUser = new UserDetailsCrud();
+		exampleUser.setUserName(userNameWIthMaxId.getUserName());
+		example = Example.create(exampleUser);
+		System.out.println("\nquery for users using example object " + exampleUser);
+		System.out.println("Only name is set and it ignores the primary key field and only pulls rows which have same value as it is in name field");
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.add(example);		
+		users = criteria.list();
+		System.out.println("users pulled using example object...");
+		for(Object user:users)
+			System.out.println(user);
+		
+		//query with no value set to primary key
+		exampleUser = new UserDetailsCrud();
+		exampleUser.setUserId(userNameWIthMaxId.getUserId());
+		example = Example.create(exampleUser);
+		System.out.println("\nquery for users using example object " + exampleUser);
+		System.out.println("Only id is set which is the primary key. So hibernate ignores it and since nothing else is set it pulls all records");
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.add(example);		
+		users = criteria.list();
+		System.out.println("users pulled using example object...");
+		for(Object user:users)
+			System.out.println(user);
+		
+		
+		//create an example		
+		example = Example.create(userNameWIthMaxId).excludeProperty("userName");
+		System.out.println("\nquery for users using example object " + userNameWIthMaxId);
+		System.out.println("We have used object with all values but have choosen to exclude some of the properties(userName here) explicitly. Result is same as previous query");
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.add(example);		
+		users = criteria.list();
+		System.out.println("users pulled using example object...");
+		for(Object user:users)
+			System.out.println(user);
+		
+		session.beginTransaction();
+		
+		
+		session.getTransaction().commit();
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	public static void demoProjections(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoProjectionsAndQueryByExample - this method demos Projections using depricated Criteria API ");	
+		
+		int maxId = -1, totalRecords = 25,  pageStart = 0;		
+		
+		//add some records for playing around
+		addSomeRecords(session, totalRecords);
+		maxId = getMaxId(session);
+		String userNameWIthMaxId = getUserWithMaxId(session).getUserName();
+		session.beginTransaction();
+		
+		System.out.println("Pull a single column using criteria api");
+		Criteria criteria = session.createCriteria(UserDetailsCrud.class)
+				.setProjection(Projections.property("userId"));		
+		criteria.add(Restrictions.ge("userId", maxId - 10));
+		List<Object> users = criteria.list();
+		for(Object user:users)
+			System.out.println(user);
+		
+		
+		System.out.println("\nAggregate functions - Count - using Criteria API Projections API");
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.setProjection(Projections.count("userId"));
+		users = criteria.list();
+		System.out.print("Count of userID = ");
+		for(Object user:users)
+			System.out.println(user);
+		
+		System.out.println("\nAggregate functions - Max - using Criteria API Projections API");
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.setProjection(Projections.max("userId"));
+		users = criteria.list();
+		System.out.print("max of userID = ");
+		for(Object user:users)
+			System.out.println(user);
+		
+		System.out.println("\nAggregate functions - Sum - using Criteria API Projections API");
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.setProjection(Projections.sum("userId"));
+		users = criteria.list();
+		System.out.print("Sum of userID = ");
+		for(Object user:users)
+			System.out.println(user);
+		
+		System.out.println("\nPull a single column using criteria api and sort in decending order");
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.setProjection(Projections.property("userId"))	
+				.add(Restrictions.ge("userId", maxId - 10))
+				.addOrder(Order.desc("userId"));
+		users = criteria.list();
+		System.out.println("userID in decending order..");
+		for(Object user:users)
+			System.out.println(user);
+		
+		
+		session.getTransaction().commit();
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
