@@ -155,6 +155,19 @@ public class HibernateTest {
 		for(Object user:users)
 			System.out.println(user);
 		
+		//create an example		
+		exampleUser = new UserDetailsCrud();
+		String likeName = userNameWIthMaxId.getUserName().substring(0, userNameWIthMaxId.getUserName().length()-1) + "%";
+		exampleUser.setUserName(likeName);
+		example = Example.create(exampleUser).enableLike();
+		System.out.println("\nquery for users using example object userName = " + likeName);		
+		criteria = session.createCriteria(UserDetailsCrud.class)
+				.add(example);		
+		users = criteria.list();
+		System.out.println("users pulled using example object...");
+		for(Object user:users)
+			System.out.println(user);
+		
 		session.beginTransaction();
 		
 		
