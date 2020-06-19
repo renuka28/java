@@ -99,14 +99,35 @@ public class HibernateTest {
 		
 		//add some records for playing around
 		addSomeRecords(session, totalRecords);
-		
+		maxId = getMaxId(session);
 		String userNameWIthMaxId = getUserWithMaxId(session).getUserName();
 		session.beginTransaction();
 		
+		System.out.println("Restrictions.ge(\"userId\", maxId - 2)");
 		Criteria criteria = session.createCriteria(UserDetailsCrud.class);
-		criteria.add(Restrictions.eq("userName", userNameWIthMaxId));
+		System.out.println(userNameWIthMaxId.substring(0, 10));
+		criteria.add(Restrictions.ge("userId", maxId - 2));
 		List<UserDetailsCrud> users = (List<UserDetailsCrud>)criteria.list();
-		System.out.println("user with userName '" + userNameWIthMaxId + "' is " + users.get(0) );
+		for(UserDetailsCrud user:users)
+			System.out.println(user);
+		
+		System.out.println("\ncriteriaAnd.add(Restrictions.ge(\"userName\", userNameWIthMaxId.substring(0,  10) + \"%\"))\r\n" + 
+				"		           .add(Restrictions.ge(\"userId\", maxId - 10))");
+		Criteria criteriaAnd = session.createCriteria(UserDetailsCrud.class);
+		criteriaAnd.add(Restrictions.ge("userName", userNameWIthMaxId.substring(0,  10) + "%"))
+		           .add(Restrictions.ge("userId", maxId - 10));
+		users = (List<UserDetailsCrud>)criteriaAnd.list();
+		for(UserDetailsCrud user:users)
+			System.out.println(user);
+		
+		System.out.println("\ncriteriaOr.add(Restrictions.or(Restrictions.ge(\"userName\", userNameWIthMaxId.substring(0,  10) + \"%\"))\r\n" + 
+				"		           .add(Restrictions.ge(\"userId\", maxId - 10)))");
+		Criteria criteriaOr = session.createCriteria(UserDetailsCrud.class);
+		criteriaOr.add(Restrictions.or(Restrictions.ge("userName", userNameWIthMaxId.substring(0,  10) + "%"))
+		           .add(Restrictions.ge("userId", maxId - 10)));
+		users = (List<UserDetailsCrud>)criteriaOr.list();
+		for(UserDetailsCrud user:users)
+			System.out.println(user);
 		
 		session.getTransaction().commit();
 		session.close();
