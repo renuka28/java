@@ -7,11 +7,14 @@ import java.util.List;
 
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQuery;
+import javax.persistence.criteria.CriteriaQuery;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.renuka.learn.java.hibernate.dto.Address;
 import org.renuka.learn.java.hibernate.dto.Address2;
 import org.renuka.learn.java.hibernate.dto.FourWheelerJoinedTable;
@@ -41,7 +44,6 @@ import org.renuka.learn.java.hibernate.dto.VehicleSingleTable;
 import org.renuka.learn.java.hibernate.dto.VehicleTablePerClass;
 
 public class HibernateTest {
-
 	private static SessionFactory sessionFactory = null;
 	private static int currentUserId = 1;
 	private static int recordPerPage = 5;
@@ -82,19 +84,57 @@ public class HibernateTest {
 		demoParameterBindingAndSQLInjection();
 		demoNamedQueries();
 		
+		//Criteria API
+		demoCriteriaAPI();
+		
 		writeSummary();
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
+	public static void demoCriteriaAPI(){
+		Session session = sessionFactory.openSession();
+		System.out.println("demoCriteriaAPI - this method demos using Criteria API ");	
+		
+		int maxId = -1, totalRecords = 25,  pageStart = 0;		
+		
+		//add some records for playing around
+		addSomeRecords(session, totalRecords);
+		
+		String userNameWIthMaxId = getUserWithMaxId(session).getUserName();
+		session.beginTransaction();
+		
+		Criteria criteria = session.createCriteria(UserDetailsCrud.class);
+		criteria.add(Restrictions.eq("userName", userNameWIthMaxId));
+		List<UserDetailsCrud> users = (List<UserDetailsCrud>)criteria.list();
+		System.out.println("user with userName '" + userNameWIthMaxId + "' is " + users.get(0) );
+		
+		session.getTransaction().commit();
+		session.close();
+		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
+	public static UserDetailsCrud getUserWithMaxId(Session session ) {
+		int maxId = getMaxId(session);
+		String namedQuery = "UserDetailsCrud.userById";
+		
+		Query userWithMaxId  = session.getNamedQuery(namedQuery);
+		namedQuery = "UserDetailsCrud.userById";
+		userWithMaxId  = userWithMaxId.setInteger("userID", maxId);
+		System.out.println("executing parameterized query - " + userWithMaxId.getQueryString());
+		List<UserDetailsCrud> users = (List<UserDetailsCrud>)userWithMaxId.getResultList();
+		return (UserDetailsCrud)users.get(0);
+	}
+	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public static void demoNamedQueries(){
+		
 		Session session = sessionFactory.openSession();
 		System.out.println("demoNamedQueries - this method demos using Named queries ");	
 		System.out.println("calling getMaxId() which uses named queires");
-		int maxId = -1, totalRecords = 9,  pageStart = 0;		
-		maxId = getMaxId(session);
-		//start from next one
-		maxId++;
-		addUserToUserDetailsCrud(session, maxId,  totalRecords);
+		
+		int maxId = -1, totalRecords = 25,  pageStart = 0;
+		addSomeRecords(session, totalRecords);
+		
 		maxId = getMaxId(session);
 		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);	
 
@@ -108,28 +148,32 @@ public class HibernateTest {
 		
 		System.out.println("\nfetching UserDetailsCrud with max id " + maxId + 
 				" using @NamedQuery(name=\"UserDetailsCrud.userById\", query=\"from UserDetailsCrud where userId = :userID\")");	
-		namedQuery = "UserDetailsCrud.userById";
-		Query userWithMaxId  = session.getNamedQuery(namedQuery);
-		namedQuery = "UserDetailsCrud.userById";
-		userWithMaxId  = userWithMaxId.setInteger("userID", maxId);
-		System.out.println("executing parameterized query - " + userWithMaxId.getQueryString());
-		List<UserDetailsCrud> users = (List<UserDetailsCrud>)userWithMaxId.getResultList();
-		System.out.println("user with max id '" + maxId +"' = " + users.get(0).toString());
+		String userNameWIthMaxId = getUserWithMaxId(session).getUserName();
+		System.out.println("user with max id '" + maxId +"' = " + userNameWIthMaxId);
 		
 		
 		System.out.println("\nfetching user by name using named query - "
 				+ "@NamedNativeQuery(name=\"UserDetailsCrud.byName\", query = \"select * from USER_DETAILS_CRUD where username = :userName\", resultClass = UserDetailsCrud.class)");
 		String namedNativeQuery = "UserDetailsCrud.byName";
-		Query byNme = session.getNamedQuery(namedNativeQuery);
-		String userName = ((UserDetailsCrud)users.get(0)).getUserName();
-		byNme = byNme.setString("userName", userName);
-		System.out.println("executing parameterized named query - " + namedQuery + " -- " + byNme.getQueryString());
-		users = (List<UserDetailsCrud>)byNme.getResultList();
-		System.out.println("user with username '" + userName +"' = " + users.get(0).toString());
+		Query byNme = session.getNamedQuery(namedNativeQuery);		
+		byNme = byNme.setString("userName", userNameWIthMaxId);
+		System.out.println("executing parameterized named query - " + namedNativeQuery + " -- " + byNme.getQueryString());
+		List<UserDetailsCrud> users = (List<UserDetailsCrud>)byNme.getResultList();
+		System.out.println(userNameWIthMaxId);		
+		System.out.println("user with username '" + userNameWIthMaxId +"' = " + users.get(0).toString());
 		
 		
 		session.close();
 		System.out.println("-----------------------------------------------------------------------------\n");
+	}
+	
+	public static void addSomeRecords(Session session, int totalRecords) {
+				
+		int maxId = getMaxId(session);
+		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);	
+		//start from next one
+		maxId++;
+		addUserToUserDetailsCrud(session, maxId,  totalRecords);
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
@@ -137,17 +181,14 @@ public class HibernateTest {
 		Session session = sessionFactory.openSession();
 		System.out.println("demoParameterBindingAndSQLInjection - this method demos parameter binding and SQL Injection using HQL and Query Object ");	
 		
-		int maxId = -1, totalRecords = 9,  pageStart = 0;
+		int maxId = -1, totalRecords = 25,  pageStart = 0;
 		
+		//add some records for further playing around
+		addSomeRecords(session, totalRecords);
 		maxId = getMaxId(session);
-		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);	
-		
-		//start from next availabe ID
-		maxId++;
-		addUserToUserDetailsCrud(session, maxId,  totalRecords);
 		
 		session.beginTransaction();
-		
+			
 		//example of sql injection . The  user is expected to enter a user id like '5' for which we will query the details
 		//instead of that they go ahead and enter an expression. If our program is capaturing the values in a string, as most
 		//programs do, then disaster waiting to happen. 
@@ -201,14 +242,10 @@ public class HibernateTest {
 		Session session = sessionFactory.openSession();
 		System.out.println("demoSelectAndPagination - this method demos Select and Pagination using HQL and Query Object ");	
 		
-		int maxId = -1, totalRecords = 10,  pageStart = 0;
+		int maxId = -1, totalRecords = 25,  pageStart = 0;
 		
-		maxId = getMaxId(session);
-		System.out.println("Max id among all records in UserDetailsCrud = " + maxId);	
-		
-		//start from next availabe ID
-		maxId++;
-		addUserToUserDetailsCrud(session, maxId,  totalRecords);
+		//add some records for further playing around
+		addSomeRecords(session, totalRecords);
 		maxId = getMaxId(session);
 		
 		session.beginTransaction();
@@ -284,10 +321,16 @@ public class HibernateTest {
 		Session session = sessionFactory.openSession();
 		System.out.println("demoHQL - this method demos using HQL and Query Object ");	
 		
-		int startId = 1000, totalRecords = 10;
-		addUserToUserDetailsCrud(session, startId,  totalRecords);
+		int maxId = -1, totalRecords = 10;
+		
+		//add some records for further playing around
+		addSomeRecords(session, totalRecords);
+		maxId = getMaxId(session);
+		
 		
 		session.beginTransaction();
+
+		
 		//get query object
 		//using org.hibernate and not that of jpa
 		Query query = session.createQuery("from UserDetailsCrud where userId > 5");		
@@ -310,7 +353,7 @@ public class HibernateTest {
 		System.out.println("demoPersistDetachedObjects - this method demos moving detached object to persisting state ");		
 		
 		//first write a record for future reterival		
-		int id = 500;
+		int id = getMaxId(session) + 1;
 		UserDetailsCrud userDetails = new UserDetailsCrud(id, "Persistent User");
 		System.out.println("saving a demo user for further reterival...");
 		System.out.println(userDetails);
@@ -357,8 +400,8 @@ public class HibernateTest {
 		UserDetailsCrud userDetailsTransient = new UserDetailsCrud(100, "User Details Transient - This WILL NOT be saved to db as we will"
 				+ " not hande over this object to sesson.save() ");
 		System.out.println(userDetailsTransient);
-		
-		UserDetailsCrud userDetailsPersistent = new UserDetailsCrud(200, "User Details Persistent - "
+		int id = getMaxId(session) + 1;
+		UserDetailsCrud userDetailsPersistent = new UserDetailsCrud(id, "User Details Persistent - "
 				+ "This will be saved to db and its changes will be tracked until we call session.close()");
 		session.beginTransaction();
 		session.save(userDetailsPersistent);
