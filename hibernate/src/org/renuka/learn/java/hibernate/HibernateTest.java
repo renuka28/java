@@ -58,6 +58,36 @@ public class HibernateTest {
 		setupSessionFactoryDB();
 		
 		//basic operation
+		demoBasicOperations();
+		
+		//relationship mapping
+		demoRelationShipMapping();
+		
+		//inheritance
+		demoInheritance();		
+		
+		//CRUD
+		demoCrud();
+		
+		//persistent objects
+		demoTransientPersistentDetached();
+		demoPersistDetachedObjects();
+		
+		//HQL
+		demoHQL();
+		
+		//Criteria API
+		demoCriteria();
+	
+		//Hibernate Cache
+		demoHibernateDefaultCache();
+		demoHibernateSecondLevelCache();
+		
+		writeSummary();
+	}
+	
+	public static void demoBasicOperations() {
+		
 		demoInsert();
 		demoReterive();
 		demoPrimaryId();
@@ -65,43 +95,38 @@ public class HibernateTest {
 		demoEmbeddedValueType2();
 		demoList();
 		demoListWithUserList6();
-		demoLazyInitializationWithUserList7();
-		
-		//relationship mapping
+		demoLazyInitializationWithUserList7();	
+	}
+	
+	public static void demoRelationShipMapping() {
+			
 		demoOneToOneMapping();
 		demoOneToManyToOneMapping();
 		demoOneToManyToManyMapping();
 		demoCascadeType();
+	}
+	
+	public static void demoInheritance() {
 		
-		//inheritance
 		demoSingleTableInheritance();
 		demoTablePerClassInheritance();
 		demoJoinedInheritance();
-		
-		//CRUD
-		demoCrud();
-		
-		demoTransientPersistentDetached();
-		demoPersistDetachedObjects();
-		
-		//HQL
-		demoHQL();
+	}
+	
+	public static void demoHQL() {
+		demoHQLBasicFeatures();
 		demoSelectAndPagination();
 		demoParameterBindingAndSQLInjection();
 		demoNamedQueries();
-		
-		//Criteria API
-		demoCriteriaAPI();
+	}
+	
+	public static void demoCriteria() {
+		demoCriteriaAPIBasics();
 		demoCriteriaProjections();
 		demoCriteriaQueryByExample();
 		
-		//Hibernate Cache
-		demoHibernateDefaultCache();
-		demoHibernateSecondLevelCache();
-		
-		
-		writeSummary();
 	}
+	
 	
 	public static void demoHibernateSecondLevelCache() {
 		
@@ -358,9 +383,9 @@ public class HibernateTest {
 	}
 	
 	@SuppressWarnings({ "deprecation", "rawtypes" })
-	public static void demoCriteriaAPI(){
+	public static void demoCriteriaAPIBasics(){
 		Session session = sessionFactory.openSession();
-		System.out.println("demoCriteriaAPI - this method demos using Criteria API ");	
+		System.out.println("demoCriteriaAPIBasics - this method demos using Criteria API ");	
 		
 		int maxId = -1, totalRecords = 25,  pageStart = 0;		
 		
@@ -605,9 +630,9 @@ public class HibernateTest {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "deprecation" })
-	public static void demoHQL(){
+	public static void demoHQLBasicFeatures(){
 		Session session = sessionFactory.openSession();
-		System.out.println("demoHQL - this method demos using HQL and Query Object ");	
+		System.out.println("demoHQLBasicFeatures - this method demos using HQL and Query Object ");	
 		
 		int maxId = -1, totalRecords = 10;
 		
