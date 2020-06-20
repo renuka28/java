@@ -97,8 +97,76 @@ public class HibernateTest {
 		
 		//Hibernate Cache
 		demoHibernateDefaultCache();
+		demoHibernateSecondLevelCache();
+		
 		
 		writeSummary();
+	}
+	
+	public static void demoHibernateSecondLevelCache() {
+		
+		Session session = sessionFactory.openSession();
+		System.out.println("\ndemoHibernateSecondLevelCache - this method demos caching in Criteria ");	
+		
+		int maxId = -1, totalRecords = 25,  pageStart = 0;		
+		
+		//add some records for playing around
+		addSomeRecords(session, totalRecords);
+		session.close();
+		
+		System.out.println("\ndemo second level caching in hibernate - enable second level caching in hibernate.cfg.xml ");
+		System.out.println("below session.get results in a select statement");
+		session = sessionFactory.openSession();
+		session.beginTransaction();
+		//we have added 25 records. so there will be a record with id 10
+		UserDetailsCrud user1 = (UserDetailsCrud) session.get(UserDetailsCrud.class, 10);
+		System.out.println(user1.toString());
+		
+		System.out.println("if we repeat the same call again it won't result in another sleect statement");		
+		UserDetailsCrud user2 = (UserDetailsCrud) session.get(UserDetailsCrud.class, 10);
+		System.out.println(user2.toString());
+		
+		System.out.println("even if we update the user it will only update the DB and won't do a select again");
+		user1.setUserName(user1.getUserName() + " - Updated");
+		user2 = (UserDetailsCrud) session.get(UserDetailsCrud.class, 10);
+		System.out.println(user2.toString());
+		
+		session.getTransaction().commit();
+		session.close();
+			
+		Session session2 = sessionFactory.openSession();
+		session2.beginTransaction();
+		System.out.println("\ndoing the same thing again in a new session will force the Hibernate to fetch the data again");		
+		user2 = (UserDetailsCrud) session2.get(UserDetailsCrud.class, 10);
+		System.out.println(user2.toString());
+		System.out.println("we can use second level cache to avoid repeated select statement above");
+		session2.getTransaction().commit();
+		session2.close();
+		
+		System.out.println("\nIf we use Query object then we hibernate will not use the cache by default. It requires cache.use.query_cache to be set true. "
+				+ "Otherwise there will be two fetches");
+		
+		Session session3 = sessionFactory.openSession();
+		System.out.println("\nFetching using QueryObject");		
+		session3.beginTransaction();
+		Query query1 = session3.createQuery("from UserDetailsCrud user where userId = 15");
+		//now this query is cacheble. This needs to be used along with cache.use.query_cache to be set true
+		query1.setCacheable(true);
+		List users = query1.list();
+		session3.getTransaction().commit();
+		session3.close();
+		
+		Session session4 = sessionFactory.openSession();
+		System.out.println("\nFetching using QueryObject");		
+		session4.beginTransaction();
+		Query query2 = session4.createQuery("from UserDetailsCrud user where userId = 15");
+		//now this query is cacheble. This needs to be used along with cache.use.query_cache to be set true
+		query2.setCacheable(true);
+		users = query2.list();
+		session4.getTransaction().commit();
+		session4.close();
+		
+		System.out.println("-----------------------------------------------------------------------------\n");
 	}
 	
 	public static void demoHibernateDefaultCache() {
@@ -110,10 +178,12 @@ public class HibernateTest {
 		
 		//add some records for playing around
 		addSomeRecords(session, totalRecords);
-
+		session.close();
+		
 		
 		System.out.println("\ndemo caching in hibernate - enable hibernate query printing using <property name=\"show_sql\">true</property> in hibernate.cfg.xml ");
 		System.out.println("below session.get results in a select statement");
+		session = sessionFactory.openSession();
 		session.beginTransaction();
 		//we have added 25 records. so there will be a record with id 10
 		UserDetailsCrud user1 = (UserDetailsCrud) session.get(UserDetailsCrud.class, 10);
@@ -138,6 +208,7 @@ public class HibernateTest {
 		user2 = (UserDetailsCrud) session2.get(UserDetailsCrud.class, 10);
 		System.out.println(user2.toString());
 		System.out.println("we can use second level cache to avoid repeated select statement above");
+		session2.getTransaction().commit();
 		session2.close();
 		
 		System.out.println("-----------------------------------------------------------------------------\n");

@@ -1,13 +1,19 @@
 package org.renuka.learn.java.hibernate.dto;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 @SuppressWarnings("deprecation")
 @Entity
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "USER_DETAILS_CRUD")
 //does the update only if there is somethign to update. Checks by doing select first
 @org.hibernate.annotations.Entity(selectBeforeUpdate=true)
