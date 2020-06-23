@@ -1,6 +1,6 @@
 package org.renuka.learn.java.springboot.data.topic;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ public class TopicController {
 	
 	@Autowired
 	private TopicService topicService;
-	
 	
 
 	@RequestMapping("/topics")

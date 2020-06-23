@@ -1,11 +1,16 @@
 package org.renuka.learn.java.springboot.data.topic;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
 public class Topic {
 	
+	@Id
 	private String id;
 	private String name;
 	private String description;
+	
 	public String getId() {
 		return id;
 	}
@@ -37,7 +42,5 @@ public class Topic {
 	public String toString() {
 		return "Topic [id=" + id + ", name=" + name + ", description=" + description + "]";
 	}
-	
-	
 
 }

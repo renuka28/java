@@ -5,52 +5,46 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TopicService {
 
-	private List<Topic> topics = new ArrayList<> (Arrays.asList(
-			new Topic("java", "Java Spring Boot", "Java Spring boot is great. Everyone should learn"),
-			new Topic("python", "Python for Machine Learning", "Python is great for ML and AI. You should learn")
-			));
+	@Autowired
+	private TopicRepository topicRepository;
+	
 	
 	public List<Topic> getAllTopics() {
-		System.out.println("getting all topics...");
+		System.out.println("getting all topics using TopicRepository...");
+		List<Topic> topics = new ArrayList<>();		
+		topicRepository.findAll().forEach(topics::add);
 		return topics;
 	}
 	
 	public Topic getTopic(String id) {
-		System.out.println("getting topic - " +id);
-		try {
-			return topics.stream().filter(t -> t.getId().equals(id.toLowerCase())).findFirst().get();
-		}catch(NoSuchElementException ex) {
-			return new Topic(id, "NOT A VALID ID - NO SUCH TOPIC EXIST", "NOT A VALID ID - DESCRIPTION NOT FOUND");
-		}
+		System.out.println("getting topic using TopicRepository- " +id);
+		return topicRepository.findById(id).get();
 		
 	}
 
 	public void addTopic(Topic topic) {
-		System.out.println("adding topic - " +topic.getId());
-		topics.add(topic);
+		System.out.println("adding topic - using TopicRepository " +topic.getId());
+		topicRepository.save(topic);		
 		
 	}
 
 	public void updateTopic(String id, Topic topic) {
-		System.out.println("updating topic - " +id + " with values " + topic);
-		for (int i =0; i < topics.size(); i++){
-			Topic t = topics.get(i);
-			if(t.getId().equals(id)) {
-				topics.set(i, topic);		
-				return;
-			}
-		}
+		System.out.println("updating topic using TopicRepository - " +id + " with values " + topic);
+		topicRepository.save(topic);
+		
 		
 	}
 
 	public void deleteTopic(String id) {
-		System.out.println("deleting topic - " +id);
-		topics.removeIf(t -> t.getId().toLowerCase().equals(id.toLowerCase()));
+		System.out.println("deleting topic  using TopicRepository- " +id);
+		topicRepository.deleteById(id);
 	}
 	
 }
