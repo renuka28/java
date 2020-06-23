@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Jun 23 16:39:32 CDT 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0172-e31f-32ea-000005f3a330 
+on database directory memory:S:\Renuka\Renuka-Data\Personal\Learning\java\spring-tools-suite\workspace\spring-boot-demo-2-course-api-data\4c198915-0ca5-40c2-b562-50d0276e1bf6 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@4e0e2f2a 
+Loaded from file:/C:/Users/renuk/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=14.0.1+7
+user.dir=S:\Renuka\Renuka-Data\Personal\Learning\java\spring-tools-suite\workspace\spring-boot-demo-2-course-api-data
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
