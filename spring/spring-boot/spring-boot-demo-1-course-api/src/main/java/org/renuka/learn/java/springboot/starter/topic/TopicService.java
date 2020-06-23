@@ -16,10 +16,12 @@ public class TopicService {
 			));
 	
 	public List<Topic> getAllTopics() {
+		System.out.println("getting all topics...");
 		return topics;
 	}
 	
 	public Topic getTopic(String id) {
+		System.out.println("getting topic - " +id);
 		try {
 			return topics.stream().filter(t -> t.getId().equals(id.toLowerCase())).findFirst().get();
 		}catch(NoSuchElementException ex) {
@@ -29,11 +31,13 @@ public class TopicService {
 	}
 
 	public void addTopic(Topic topic) {
+		System.out.println("adding topic - " +topic.getId());
 		topics.add(topic);
 		
 	}
 
 	public void updateTopic(String id, Topic topic) {
+		System.out.println("updating topic - " +id + " with values " + topic);
 		for (int i =0; i < topics.size(); i++){
 			Topic t = topics.get(i);
 			if(t.getId().equals(id)) {
@@ -42,6 +46,11 @@ public class TopicService {
 			}
 		}
 		
+	}
+
+	public void deleteTopic(String id) {
+		System.out.println("deleting topic - " +id);
+		topics.removeIf(t -> t.getId().toLowerCase().equals(id.toLowerCase()));
 	}
 	
 }

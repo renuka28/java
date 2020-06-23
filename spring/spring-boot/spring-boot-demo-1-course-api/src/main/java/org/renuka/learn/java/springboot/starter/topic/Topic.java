@@ -32,6 +32,10 @@ public class Topic {
 	public Topic() {
 		super();
 	}
+	@Override
+	public String toString() {
+		return "Topic [id=" + id + ", name=" + name + ", description=" + description + "]";
+	}
 	
 	
 
