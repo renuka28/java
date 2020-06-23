@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class TopicService {
 
-	private List<Topic> topics = Arrays.asList(
+	private List<Topic> topics = new ArrayList<> (Arrays.asList(
 			new Topic("java", "Java Spring Boot", "Java Spring boot is great. Everyone should learn"),
 			new Topic("python", "Python for Machine Learning", "Python is great for ML and AI. You should learn")
-			);
+			));
 	
 	public List<Topic> getAllTopics() {
 		return topics;
@@ -25,6 +25,11 @@ public class TopicService {
 		}catch(NoSuchElementException ex) {
 			return new Topic(id, "NOT A VALID ID - NO SUCH TOPIC EXIST", "NOT A VALID ID - DESCRIPTION NOT FOUND");
 		}
+		
+	}
+
+	public void addTopic(Topic topic) {
+		topics.add(topic);
 		
 	}
 	
