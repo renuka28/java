@@ -25,14 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //super.configure(auth);
         auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .withDefaultSchema()
-                .withUser(User.withUsername("renuka")
-                        .password("renuka")
-                        .roles("ADMIN"))
-                .withUser(User.withUsername("gubol")
-                        .password("gubol")
-                        .roles("USER"));
+                .dataSource(dataSource);
     }
 
     @Override
