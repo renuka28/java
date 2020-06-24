@@ -2,6 +2,7 @@ package org.renuka.learn.java.basic.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -20,11 +21,22 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .roles("ADMIN").and()
                 .withUser("gubol")
                 .password("gubol")
-                .roles("Non Admin");
+                .roles("USER");
     }
 
     @Bean
     public PasswordEncoder getPasswordEncoder(){
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+//        super.configure(http);
+        System.out.println("configuring authorization");
+        http.authorizeRequests()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/").permitAll()
+                .and().formLogin();
     }
 }
