@@ -57,6 +57,4 @@ public class Course {
 		return "Course [id=" + id + ", name=" + name + ", description=" + description + ", topic=" + topic + "]";
 	}
 	
-	
-	
 }
